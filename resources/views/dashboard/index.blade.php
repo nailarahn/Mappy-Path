@@ -1,0 +1,236 @@
+@extends('layouts.dashboard')
+
+@section('title', 'Dashboard')
+
+@push('styles')
+<style>
+.page-header { margin-bottom: 1.75rem; }
+.page-greeting { font-size: 1.75rem; font-weight: 800; color: var(--primary); }
+.page-greeting span { color: var(--gray-800); }
+.page-sub { font-size: 0.9rem; color: var(--gray-400); margin-top: 0.25rem; }
+
+.continue-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1.5px solid var(--gray-200);
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+.continue-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #e8e0f8, #d4c8f0);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+.continue-info { flex: 1; }
+.continue-title { font-size: 1.1rem; font-weight: 700; color: var(--gray-800); }
+.continue-stage { font-size: 0.82rem; color: var(--gray-400); margin: 0.25rem 0 0.75rem; }
+.continue-progress { margin-bottom: 0.75rem; }
+
+.rec-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--gray-200);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.rec-item:last-child { border-bottom: none; }
+.rec-item:hover { background: var(--gray-100); }
+.rec-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+.rec-info { flex: 1; }
+.rec-title { font-size: 0.9rem; font-weight: 600; color: var(--gray-800); }
+.rec-meta { font-size: 0.78rem; color: var(--gray-400); }
+.rec-arrow { color: var(--gray-300); font-size: 1rem; }
+.rec-arrow:hover { color: var(--primary); }
+
+.progress-chart {
+    width: 100%;
+    overflow-x: auto;
+}
+canvas { max-width: 100%; }
+</style>
+@endpush
+
+@section('content')
+
+<div class="page-header">
+    <div class="page-greeting">Halo, <span>{{ explode(' ', Auth::user()->name)[0] }}!</span> 👋</div>
+    <div class="page-sub">Semangat belajar hari ini!</div>
+</div>
+
+<!-- STAT CARDS -->
+<div class="stat-cards">
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <span class="stat-label">Total Progress</span>
+            <div class="stat-icon" style="background:#ede9ff;">📊</div>
+        </div>
+        <div class="stat-value">75%</div>
+        <div class="stat-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width:75%"></div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <span class="stat-label">Tahap saat ini</span>
+            <div class="stat-icon" style="background:#fff7ed;">📖</div>
+        </div>
+        <div class="stat-value" style="font-size:1.1rem;font-weight:700;margin-top:.25rem;">Jaringan Dasar TKJ</div>
+        <div class="stat-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width:65%"></div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <span class="stat-label">Materi Selesai</span>
+            <div class="stat-icon" style="background:#ecfdf5;">📚</div>
+        </div>
+        <div class="stat-value">10<span style="font-size:1rem;color:var(--gray-400);font-weight:500;">/54</span></div>
+        <div class="stat-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width:18.5%"></div>
+            </div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <span class="stat-label">Target Minggu</span>
+            <div class="stat-icon" style="background:#f0fdf4;">🎯</div>
+        </div>
+        <div class="stat-value">4<span style="font-size:1rem;color:var(--gray-400);font-weight:500;">/5</span></div>
+        <div class="stat-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width:80%"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- LANJUTKAN & REKOMENDASI -->
+<div class="grid-2" style="margin-bottom:1.5rem;">
+    <!-- Lanjutkan Belajar -->
+    <div class="card">
+        <div class="card-header">Lanjutkan Belajar</div>
+        <div class="card-body">
+            <div class="continue-card" style="border:none;padding:0;">
+                <div class="continue-icon">🔗</div>
+                <div class="continue-info">
+                    <div class="continue-title">Dasar Jaringan</div>
+                    <div class="continue-stage">Tahap 2 dari 8</div>
+                    <div class="continue-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width:25%"></div>
+                        </div>
+                    </div>
+                    <a href="{{ route('roadmap') }}" class="btn btn-primary btn-sm">Lanjutkan →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rekomendasi -->
+    <div class="card">
+        <div class="card-header">Rekomendasi Materi Untukmu</div>
+        @foreach($recommendations as $rec)
+        <div class="rec-item">
+            <div class="rec-icon" style="background:{{ $rec['color'] }}22;">{{ $rec['icon'] }}</div>
+            <div class="rec-info">
+                <div class="rec-title">{{ $rec['title'] }}</div>
+                <div class="rec-meta">{{ $rec['type'] }} · {{ $rec['duration'] }}</div>
+            </div>
+            <span class="rec-arrow">›</span>
+        </div>
+        @endforeach
+    </div>
+</div>
+
+<!-- GRAFIK PROGRESS -->
+<div class="card">
+    <div class="card-header">Ringkasan Progress</div>
+    <div class="card-body">
+        <div class="progress-chart">
+            <canvas id="progressChart" height="80"></canvas>
+        </div>
+    </div>
+</div>
+
+@endsection
+
+@push('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+const ctx = document.getElementById('progressChart').getContext('2d');
+const progressData = @json($progressData);
+
+const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+gradient.addColorStop(0, 'rgba(55, 36, 102, 0.25)');
+gradient.addColorStop(1, 'rgba(55, 36, 102, 0)');
+
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: progressData.map(d => d.minggu),
+        datasets: [{
+            label: 'Progress',
+            data: progressData.map(d => d.progress),
+            borderColor: '#372466',
+            backgroundColor: gradient,
+            borderWidth: 2.5,
+            pointBackgroundColor: '#372466',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            tension: 0.4,
+            fill: true,
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    font: { family: 'Poppins', size: 12 },
+                    color: '#6d5f9a',
+                    usePointStyle: true,
+                    pointStyleWidth: 8,
+                }
+            }
+        },
+        scales: {
+            y: {
+                min: 0, max: 100,
+                grid: { color: 'rgba(55,36,102,0.07)' },
+                ticks: { font: { family: 'Poppins', size: 11 }, color: '#9589b8' }
+            },
+            x: {
+                grid: { display: false },
+                ticks: { font: { family: 'Poppins', size: 11 }, color: '#9589b8' }
+            }
+        }
+    }
+});
+</script>
+@endpush
