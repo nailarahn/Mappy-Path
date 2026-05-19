@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
-
+    use HasApiTokens, HasFactory, Notifiable; 
     protected $fillable = [
         'name',
         'username',
@@ -32,9 +32,9 @@ class User extends Authenticatable
     public function getRoleLabel(): string
     {
         return match($this->role) {
-            'admin' => 'Admin',
+            'admin'   => 'Admin',
             'teacher' => 'Guru',
-            default => 'Pelajar',
+            default   => 'Pelajar',
         };
     }
 }
