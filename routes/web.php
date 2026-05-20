@@ -19,10 +19,18 @@ Route::get('/register', [RegisterController::class, 'showRegister'])->name('regi
 Route::post('/register', [RegisterController::class, 'register'])->name('register.post');
 Route::post('/logout', [RegisterController::class, 'logout'])->name('logout');
 
-// Dashboard (Protected)
-Route::middleware(['auth'])->group(function () {
+// ── DASHBOARD (AUTH REQUIRED) ─────────────────────────
+Route::middleware('auth')->group(function () {
+
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Roadmap
     Route::get('/roadmap', [DashboardController::class, 'roadmap'])->name('roadmap');
-    Route::get('/target', [DashboardController::class, 'target'])->name('target');
+    Route::post('/roadmap/{roadmapId}/enroll', [DashboardController::class, 'enroll'])->name('roadmap.enroll');
+    Route::get('/roadmap/{roadmapId}/stage/{stageId}', [DashboardController::class, 'stage'])->name('roadmap.stage');
+    Route::post('/roadmap/{roadmapId}/stage/{stageId}/complete', [DashboardController::class, 'completeStage'])->name('roadmap.complete');
+
+    // Target & Progress
+    Route::get('/target',   [DashboardController::class, 'target'])->name('target');
     Route::get('/progress', [DashboardController::class, 'progress'])->name('progress');
 });
