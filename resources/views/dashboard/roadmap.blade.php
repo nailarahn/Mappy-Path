@@ -3,12 +3,21 @@
 
 @push('styles')
 <style>
-/* ── PAGE HEADER ─────────────────────────────────── */
-.page-header { margin-bottom: 2rem; }
-.page-title  { font-size: 1.6rem; font-weight: 800; color: var(--gray-800); }
-.page-sub    { font-size: 0.9rem; color: var(--gray-400); margin-top: 0.25rem; }
 
-/* ── LEVEL TABS ──────────────────────────────────── */
+.page-header { 
+    margin-bottom: 2rem; 
+}
+.page-title  { 
+    font-size: 1.6rem; 
+    font-weight: 800; 
+    color: var(--gray-800); 
+}
+.page-sub    { 
+    font-size: 0.9rem; 
+    color: var(--gray-400); 
+    margin-top: 0.25rem; 
+}
+
 .level-tabs {
     display: flex;
     border-bottom: 2px solid var(--gray-200);
@@ -30,13 +39,14 @@
     margin-bottom: -2px;
     transition: all 0.2s;
 }
-.level-tab:hover { color: var(--primary); }
+.level-tab:hover { 
+    color: var(--primary); 
+}
 .level-tab.active {
     color: var(--primary);
     border-bottom-color: var(--primary);
 }
 
-/* ── STAGE LIST ──────────────────────────────────── */
 .stage-list {
     display: flex;
     flex-direction: column;
@@ -44,7 +54,6 @@
     position: relative;
 }
 
-/* vertical line */
 .stage-list::before {
     content: '';
     position: absolute;
@@ -72,7 +81,6 @@
 .stage-item.locked { cursor: not-allowed; opacity: 0.6; }
 .stage-item.locked:hover { background: none; padding-left: 0; }
 
-/* number circle */
 .stage-num {
     width: 46px;
     height: 46px;
@@ -101,7 +109,9 @@
     box-shadow: 0 0 0 4px rgba(55,36,102,0.1);
 }
 
-.stage-info { flex: 1; }
+.stage-info { 
+    flex: 1; 
+}
 .stage-title {
     font-size: 0.95rem;
     font-weight: 700;
@@ -122,15 +132,24 @@
     color: var(--gray-400);
     flex-shrink: 0;
 }
-.stage-action.done-icon { color: #22c55e; }
-.stage-action.arrow-icon { color: var(--gray-400); font-size: 1.1rem; }
-.stage-action.lock-icon  { color: var(--gray-300); }
+.stage-action.done-icon { 
+    color: #22c55e; 
+}
+.stage-action.arrow-icon { 
+    color: var(--gray-400); 
+    font-size: 1.1rem; 
+}
+.stage-action.lock-icon  { 
+    color: var(--gray-300); 
+}
 
-/* tab content */
-.tab-content { display: none; }
-.tab-content.active { display: block; }
+.tab-content { 
+    display: none; 
+}
+.tab-content.active { 
+    display: block; 
+}
 
-/* roadmap category pills */
 .roadmap-pills {
     display: flex;
     gap: 0.5rem;
@@ -156,7 +175,6 @@
     color: white;
 }
 
-/* enrolled badge */
 .enrolled-badge {
     display: inline-flex;
     align-items: center;
@@ -170,7 +188,6 @@
     margin-left: 0.75rem;
 }
 
-/* progress mini bar at top of stage list */
 .roadmap-progress-bar {
     display: flex;
     align-items: center;
@@ -181,9 +198,22 @@
     padding: 1rem 1.5rem;
     margin-bottom: 1.75rem;
 }
-.roadmap-progress-bar .label { font-size: 0.82rem; color: var(--gray-400); font-weight: 500; min-width: 90px; }
-.roadmap-progress-bar .bar   { flex: 1; }
-.roadmap-progress-bar .pct   { font-size: 0.9rem; font-weight: 700; color: var(--primary); min-width: 40px; text-align: right; }
+.roadmap-progress-bar .label { 
+    font-size: 0.82rem; 
+    color: var(--gray-400); 
+    font-weight: 500; 
+    min-width: 90px; 
+}
+.roadmap-progress-bar .bar   { 
+    flex: 1; 
+}
+.roadmap-progress-bar .pct   {
+    font-size: 0.9rem; 
+    font-weight: 700; 
+    color: var(--primary); 
+    min-width: 40px; 
+    text-align: right; 
+}
 
 @media (max-width: 640px) {
     .stage-list::before { left: 22px; }
@@ -207,15 +237,14 @@
     <button class="level-tab" onclick="switchLevel('lanjutan', this)">Lanjutan</button>
 </div>
 
-{{-- ── DASAR ───────────────────────────────────── --}}
 <div class="tab-content active" id="tab-dasar">
    @php $dasarRoadmaps = collect($roadmaps)->where('level', 'beginner'); @endphp
 
     @if($dasarRoadmaps->isEmpty())
         <div style="text-align:center;padding:3rem;color:var(--gray-400);">Belum ada roadmap level dasar.</div>
     @else
-        {{-- Roadmap selector pills --}}
-        <div class="roadmap-pills" id="pills-dasar">
+
+    <div class="roadmap-pills" id="pills-dasar">
             @foreach($dasarRoadmaps as $i => $rm)
             <button class="roadmap-pill {{ $i === 0 ? 'active' : '' }}"
                     onclick="switchRoadmap('dasar', {{ $rm->id }}, this)">
@@ -227,11 +256,9 @@
             @endforeach
         </div>
 
-        {{-- Stage lists per roadmap --}}
         @foreach($dasarRoadmaps as $i => $rm)
         <div class="roadmap-stages {{ $i === 0 ? '' : 'd-none' }}" id="stages-dasar-{{ $rm->id }}">
 
-            {{-- Progress bar (only if enrolled) --}}
             @if($rm->is_enrolled)
             <div class="roadmap-progress-bar">
                 <span class="label">Progress kamu</span>
@@ -307,7 +334,6 @@
     @endif
 </div>
 
-{{-- ── MENENGAH ─────────────────────────────────── --}}
 <div class="tab-content" id="tab-menengah">
     @php $menengahRoadmaps = collect($roadmaps)->where('level','intermediate'); @endphp
     @if($menengahRoadmaps->isEmpty())
@@ -360,7 +386,6 @@
     @endif
 </div>
 
-{{-- ── LANJUTAN ─────────────────────────────────── --}}
 <div class="tab-content" id="tab-lanjutan">
     @php $lanjutanRoadmaps = collect($roadmaps)->where('level','advanced'); @endphp
     @if($lanjutanRoadmaps->isEmpty())
@@ -414,11 +439,11 @@ function switchLevel(level, btn) {
 }
 
 function switchRoadmap(level, roadmapId, btn) {
-    // hide all stages in this level
+
     document.querySelectorAll(`[id^="stages-${level}-"]`).forEach(el => el.classList.add('d-none'));
-    // deactivate all pills in this level
+
     document.querySelectorAll(`#pills-${level} .roadmap-pill`).forEach(b => b.classList.remove('active'));
-    // show selected
+
     document.getElementById(`stages-${level}-${roadmapId}`)?.classList.remove('d-none');
     btn.classList.add('active');
 }

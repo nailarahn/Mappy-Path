@@ -20,27 +20,25 @@
 .stage-progress-row .bar { flex: 1; }
 .stage-progress-pct { font-size: .875rem; font-weight: 700; color: var(--primary); white-space: nowrap; }
 
-/* GRID */
 .stage-grid { display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; align-items: start; }
 
-/* VIDEO */
 .video-card { background: var(--white); border-radius: 16px; overflow: hidden; border: 1.5px solid var(--gray-200); }
 
-/* YouTube embed */
 .yt-wrapper {
     position: relative; width: 100%; aspect-ratio: 16/9;
     background: #000; overflow: hidden;
 }
 .yt-wrapper iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
 
-/* Thumbnail placeholder (before click) */
 .yt-thumb {
     position: absolute; inset: 0;
     background: linear-gradient(135deg, #1a0a3c 0%, #372466 50%, #7c5cbf 100%);
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     cursor: pointer; z-index: 2; transition: opacity .3s;
 }
-.yt-thumb:hover .play-circle { transform: scale(1.1); }
+.yt-thumb:hover .play-circle { 
+    transform: scale(1.1); 
+}
 .yt-thumb .badge-top {
     position: absolute; top: 1rem; left: 1rem;
     background: rgba(55,36,102,.85); color: white; font-size: .7rem; font-weight: 700;
@@ -52,14 +50,20 @@
     color: #c4a8f0; text-align: center; padding: 0 1.5rem; line-height: 1.3; margin-bottom: .75rem;
     text-shadow: 0 2px 12px rgba(0,0,0,.4);
 }
-.yt-thumb .thumb-sub { font-size: .78rem; color: rgba(255,255,255,.6); text-align: center; padding: 0 2rem; }
+.yt-thumb .thumb-sub { 
+    font-size: .78rem; 
+    color: rgba(255,255,255,.6); 
+    text-align: center; 
+    padding: 0 2rem; 
+}
 .play-circle {
     width: 68px; height: 68px; background: rgba(255,255,255,.92);
     border-radius: 50%; display: flex; align-items: center; justify-content: center;
     margin-bottom: 1.25rem; transition: transform .2s; box-shadow: 0 8px 30px rgba(0,0,0,.35);
 }
-.play-circle svg { margin-left: 5px; }
-/* decorative rings */
+.play-circle svg { 
+    margin-left: 5px; 
+}
 .yt-thumb::before {
     content: ''; position: absolute; width: 300px; height: 300px;
     border-radius: 50%; border: 1px solid rgba(255,255,255,.08);
@@ -71,10 +75,20 @@
     bottom: -60px; left: -40px;
 }
 
-/* VIDEO INFO */
-.video-info { padding: 1.5rem; }
-.video-info-title { font-size: 1.05rem; font-weight: 700; color: var(--gray-800); margin-bottom: .4rem; }
-.video-info-desc { font-size: .875rem; color: var(--gray-500); line-height: 1.65; margin-bottom: 1rem; }
+.video-info { 
+    padding: 1.5rem; 
+}
+.video-info-title { 
+    font-size: 1.05rem; 
+    font-weight: 700; 
+    color: var(--gray-800); margin-bottom: .4rem; 
+}
+.video-info-desc { 
+    font-size: .875rem; 
+    color: var(--gray-500); 
+    line-height: 1.65; 
+    margin-bottom: 1rem; 
+}
 .video-meta-row {
     display: flex; align-items: center; gap: 1.25rem;
     font-size: .8rem; color: var(--gray-400); margin-bottom: 1.25rem; flex-wrap: wrap;
@@ -92,14 +106,12 @@
 .learning-box ul li { font-size: .82rem; color: var(--gray-600); display: flex; align-items: flex-start; gap: .5rem; }
 .learning-box ul li::before { content: '•'; color: var(--primary); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
 
-/* SUCCESS ALERT */
 .alert-success {
     background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a;
     border-radius: 10px; padding: .85rem 1rem; font-size: .875rem;
     margin-bottom: 1.25rem; display: flex; align-items: center; gap: .5rem;
 }
 
-/* COMPLETE BTN */
 .complete-btn {
     width: 100%; padding: .9rem;
     background: var(--primary); color: white; border: none; border-radius: 12px;
@@ -111,7 +123,6 @@
 .complete-btn.done { background: #ecfdf5; color: #16a34a; cursor: default; }
 .complete-btn.done:hover { transform: none; box-shadow: none; }
 
-/* SIDEBAR */
 .materi-sidebar {
     background: var(--white); border-radius: 16px; border: 1.5px solid var(--gray-200);
     overflow: hidden; position: sticky; top: 80px; max-height: calc(100vh - 120px); overflow-y: auto;
@@ -122,21 +133,40 @@
     position: sticky; top: 0; background: var(--white); z-index: 1;
 }
 
-/* accordion */
-.acc-group { border-bottom: 1px solid var(--gray-200); }
-.acc-group:last-child { border-bottom: none; }
+.acc-group { 
+    border-bottom: 1px solid var(--gray-200); 
+}
+.acc-group:last-child { 
+    border-bottom: none; 
+}
 .acc-header {
     display: flex; align-items: center; justify-content: space-between;
     padding: .9rem 1.25rem; cursor: pointer; font-size: .85rem; font-weight: 700;
     color: var(--gray-700); transition: background .15s; gap: .5rem; user-select: none;
 }
-.acc-header:hover { background: var(--gray-100); }
-.acc-header.is-active { color: var(--primary); }
-.acc-chevron { width: 16px; height: 16px; flex-shrink: 0; transition: transform .2s; color: var(--gray-400); }
-.acc-header.is-open .acc-chevron { transform: rotate(180deg); }
+.acc-header:hover { 
+    background: var(--gray-100); 
+}
+.acc-header.is-active { 
+    color: var(--primary); 
+}
+.acc-chevron { 
+    width: 16px; 
+    height: 16px; 
+    flex-shrink: 0; 
+    transition: transform .2s; 
+    color: var(--gray-400); 
+}
+.acc-header.is-open .acc-chevron { 
+    transform: rotate(180deg); 
+}
 
-.acc-body { display: none; }
-.acc-body.is-open { display: block; }
+.acc-body { 
+    display: none; 
+}
+.acc-body.is-open { 
+    display: block; 
+}
 
 .materi-item {
     display: flex; align-items: center; gap: .7rem;
@@ -154,7 +184,6 @@
 .materi-title.t-active { color: var(--primary); }
 .materi-dur { font-size: .68rem; color: var(--gray-400); display: flex; align-items: center; gap: .2rem; margin-top: 1px; }
 
-/* next stage link */
 .next-group-link {
     display: flex; align-items: center; justify-content: space-between;
     padding: .9rem 1.25rem; text-decoration: none; font-size: .85rem; font-weight: 600;
@@ -185,12 +214,10 @@
     Kembali ke Roadmap
 </a>
 
-{{-- SESSION ALERT --}}
 @if(session('success'))
 <div class="alert-success">✅ {{ session('success') }}</div>
 @endif
 
-{{-- STAGE HEADER --}}
 <div class="stage-header">
     <div>
         <div class="stage-main-title">{{ $stage->title }}</div>
@@ -204,19 +231,16 @@
     </div>
 </div>
 
-{{-- MAIN GRID --}}
 <div class="stage-grid">
 
-    {{-- LEFT: VIDEO + INFO --}}
     <div>
         <div class="video-card">
 
-            {{-- YOUTUBE EMBED --}}
             <div class="yt-wrapper" id="ytWrapper">
                 @php $ytId = $stage->getYoutubeId(); @endphp
 
                 @if($ytId)
-                {{-- Thumbnail shown first, click to play --}}
+
                 <div class="yt-thumb" id="ytThumb" onclick="loadYoutube('{{ $ytId }}')">
                     <div class="badge-top">🎬 {{ $stage->getTypeLabel() }}</div>
                     <div class="play-circle">
@@ -226,7 +250,7 @@
                     <div class="thumb-sub">{{ $stage->description }}</div>
                 </div>
                 @else
-                {{-- No video --}}
+
                 <div style="position:absolute;inset:0;background:linear-gradient(135deg,#1a0a3c,#372466);display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,.6);gap:.75rem;">
                     <div style="font-size:2.5rem;">📄</div>
                     <div style="font-size:.875rem;">Konten berupa {{ $stage->getTypeLabel() }}</div>
@@ -234,7 +258,7 @@
                 @endif
             </div>
 
-            {{-- VIDEO INFO --}}
+
             <div class="video-info">
                 <div class="video-info-title">{{ $stage->title }}</div>
                 <div class="video-info-desc">
@@ -252,7 +276,7 @@
                     <span>🎯 {{ $roadmap->title }}</span>
                 </div>
 
-                {{-- LEARNING POINTS --}}
+
                 @if($stage->learning_points)
                 <div class="learning-box">
                     <div class="learning-box-title">
@@ -267,7 +291,7 @@
                 </div>
                 @endif
 
-                {{-- COMPLETE BUTTON --}}
+
                 @if($isCompleted)
                 <div class="complete-btn done">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
@@ -286,7 +310,7 @@
         </div>
     </div>
 
-    {{-- RIGHT: SIDEBAR MATERI --}}
+
     <div>
         <div class="materi-sidebar">
             <div class="materi-sidebar-header">Daftar Materi</div>
@@ -302,7 +326,7 @@
             @endphp
 
             @if($hasActive)
-            {{-- OPEN GROUP --}}
+
             <div class="acc-group">
                 <div class="acc-header is-open is-active" onclick="toggleAcc(this)">
                     <span>{{ $groupName }}</span>
@@ -338,7 +362,7 @@
                 </div>
             </div>
             @else
-            {{-- COLLAPSED GROUP --}}
+
             <div class="acc-group">
                 <div class="acc-header {{ $allDone ? 'is-active' : '' }}" onclick="toggleAcc(this)">
                     <span>
@@ -388,7 +412,7 @@ function loadYoutube(videoId) {
     const thumb = document.getElementById('ytThumb');
     if (!thumb) return;
 
-    // Fade out thumb then load iframe
+
     thumb.style.opacity = '0';
     thumb.style.pointerEvents = 'none';
 
