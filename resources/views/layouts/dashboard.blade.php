@@ -404,11 +404,10 @@
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
         <div class="logo-icon">
-            <img src="img/Icon.png" alt="Logo Mappy Path">
+            <img src="{{ asset('img/Icon.png') }}" alt="Logo Mappy Path">
         </div>
         <span class="logo-text">Mappy Path</span>
     </div>
-
     <nav class="sidebar-nav">
         <a href="{{ route('dashboard') }}" class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
