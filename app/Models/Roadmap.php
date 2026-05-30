@@ -21,8 +21,7 @@ class Roadmap extends Model
         'is_active' => 'boolean',
     ];
 
-    // ── RELATIONS ──────────────────────────────────────
-    public function stages(): HasMany
+        public function stages(): HasMany
     {
         return $this->hasMany(Stage::class)->orderBy('order');
     }
@@ -39,7 +38,6 @@ class Roadmap extends Model
                     ->withTimestamps();
     }
 
-    // ── SCOPES ─────────────────────────────────────────
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
@@ -50,7 +48,6 @@ class Roadmap extends Model
         return $query->where('category', $category);
     }
 
-    // ── HELPERS ────────────────────────────────────────
     public function getLevelLabel(): string
     {
         return match($this->level) {

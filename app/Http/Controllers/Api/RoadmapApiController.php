@@ -9,10 +9,7 @@ use Illuminate\Http\Request;
 
 class RoadmapApiController extends BaseApiController
 {
-    /**
-     * GET /api/v1/roadmap
-     * Semua roadmap + status enrollment user
-     */
+
     public function index(Request $request)
     {
         $roadmaps = Roadmap::active()
@@ -23,10 +20,7 @@ class RoadmapApiController extends BaseApiController
         return $this->success($roadmaps);
     }
 
-    /**
-     * GET /api/v1/roadmap/{id}
-     * Detail roadmap + semua stages + progress user per stage
-     */
+ 
     public function show(Request $request, $id)
     {
         $roadmap = Roadmap::with('stages')->find($id);
@@ -67,10 +61,7 @@ class RoadmapApiController extends BaseApiController
         ]);
     }
 
-    /**
-     * POST /api/v1/roadmap/{id}/enroll
-     * Daftar ke roadmap
-     */
+
     public function enroll(Request $request, $id)
     {
         $roadmap = Roadmap::find($id);
@@ -115,7 +106,6 @@ class RoadmapApiController extends BaseApiController
             ]
         );
 
-        // Update progress
         $totalStages     = Roadmap::find($roadmapId)?->total_stages ?? 1;
         $completedStages = UserStage::where('user_id', $userId)
                                     ->where('roadmap_id', $roadmapId)
@@ -129,7 +119,6 @@ class RoadmapApiController extends BaseApiController
             'completed_at' => $progress >= 100 ? now() : null,
         ]);
 
-        // Log pembelajaran
         \App\Models\LearningLog::create([
             'user_id'          => $userId,
             'stage_id'         => $stageId,
@@ -146,10 +135,7 @@ class RoadmapApiController extends BaseApiController
         ], 'Tahap berhasil diselesaikan! 🎉');
     }
 
-    /**
-     * GET /api/v1/roadmap/my
-     * Roadmap yang user sedang ikuti
-     */
+
     public function myRoadmaps(Request $request)
     {
         $userId   = $request->user()->id;
@@ -167,7 +153,6 @@ class RoadmapApiController extends BaseApiController
         return $this->success($enrolled);
     }
 
-    // ── PRIVATE HELPERS ────────────────────────────────
     private function formatRoadmap(Roadmap $r, int $userId): array
     {
         $enrollment = UserRoadmap::where('user_id', $userId)->where('roadmap_id', $r->id)->first();
