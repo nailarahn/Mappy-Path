@@ -320,43 +320,52 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        $stats = [
-            'total_materi'   => $user->completedStages()->count(),
-            'materi_selesai' => $user->completedStages()->count(),
-            'total_jam'      => $user->getTotalLearningHours(),
-            'badges'         => $user->badges()->count(),
-            'streak'         => $user->getStreakDays(),
-        ];
+        $totalHariBelajar = LearningLog::where('user_id', $user->id)
+            ->selectRaw('COUNT(DISTINCT DATE(log_date)) as total')
+            ->value('total') ?? 0;
 
-        $weekly = [];
+        $materiSelesai = UserStage::where('user_id', $user->id)
+            ->where('is_completed', true)
+            ->count();
 
+        $totalJam = round(LearningLog::where('user_id', $user->id)->sum('duration_minutes') / 60);
+
+        $badgeEarned = \DB::table('user_badges')->where('user_id', $user->id)->count();
+
+        $chartData = [];
         for ($i = 3; $i >= 0; $i--) {
-
             $start = now()->subWeeks($i)->startOfWeek()->toDateString();
-
-            $end = now()->subWeeks($i)->endOfWeek()->toDateString();
+            $end   = now()->subWeeks($i)->endOfWeek()->toDateString();
 
             $mins = LearningLog::where('user_id', $user->id)
                 ->whereBetween('log_date', [$start, $end])
                 ->sum('duration_minutes');
 
-            $weekly[] = [
-                'week' => $i === 0
-                    ? 'Minggu ini'
-                    : ($i === 1
-                        ? 'Minggu lalu'
-                        : "Minggu -{$i}"),
-
-                'val' => $mins > 0
-                    ? min(100, (int) ($mins / 6))
-                    : 0,
+            $chartData[] = [
+                'label'  => $i === 0 ? 'Minggu ini' : 'Minggu -' . $i,
+                'materi' => UserStage::where('user_id', $user->id)
+                    ->where('is_completed', true)
+                    ->whereBetween('completed_at', [$start, $end])
+                    ->count(),
+                'jam' => round($mins / 60),
             ];
         }
 
+        $unlockedIds = \DB::table('user_badges')->where('user_id', $user->id)->pluck('badge_id')->toArray();
+        $badges = \DB::table('badges')->get()->map(fn($b) => [
+            'name'     => $b->name,
+            'desc'     => $b->description,
+            'color'    => $b->color ?? 'indigo',
+            'unlocked' => in_array($b->id, $unlockedIds),
+        ])->toArray();
+
         return view('dashboard.progress', compact(
-            'user',
-            'stats',
-            'weekly'
+            'totalHariBelajar',
+            'materiSelesai',
+            'totalJam',
+            'badgeEarned',
+            'chartData',
+            'badges'
         ));
     }
 }
