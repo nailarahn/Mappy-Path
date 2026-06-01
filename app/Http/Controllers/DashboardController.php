@@ -9,6 +9,7 @@ use App\Models\UserRoadmap;
 use App\Models\UserStage;
 use App\Models\LearningLog;
 
+
 class DashboardController extends Controller
 {
     public function index()
@@ -302,6 +303,8 @@ class DashboardController extends Controller
             ->with('success', 'Selamat! Kamu telah menyelesaikan semua materi di roadmap ini 🏆');
     }
 
+    
+    // TARGET
     public function target()
     {
         $user = Auth::user();
@@ -314,6 +317,74 @@ class DashboardController extends Controller
             'user',
             'targets'
         ));
+    }
+
+    public function targetCreate()
+    {
+        return view('dashboard.targetform');
+    }
+
+    public function targetStore(Request $request)
+    {
+        $request->validate([
+            'name'         => 'required|string|max:255',
+            'target_value' => 'required|integer|min:1',
+            'deadline'     => 'nullable|date',
+        ]);
+
+        Auth::user()->targets()->create([
+            'name'          => $request->name,
+            'description'   => $request->description,
+            'target_value'  => $request->target_value,
+            'current_value' => 0,
+            'deadline'      => $request->deadline,
+            'status'        => 'active',
+        ]);
+
+        return redirect()
+            ->route('target')
+            ->with('success', 'Target berhasil ditambahkan! 🎯');
+    }
+
+    public function targetEdit($id)
+    {
+        $target = Auth::user()->targets()->findOrFail($id);
+
+        return view('dashboard.targetform', compact('target'));
+    }
+
+    public function targetUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'name'         => 'required|string|max:255',
+            'target_value' => 'required|integer|min:1',
+            'deadline'     => 'nullable|date',
+        ]);
+
+        $target = Auth::user()->targets()->findOrFail($id);
+
+        $target->update([
+            'name'         => $request->name,
+            'description'  => $request->description,
+            'target_value' => $request->target_value,
+            'deadline'     => $request->deadline,
+        ]);
+
+        return redirect()
+            ->route('target')
+            ->with('success', 'Target berhasil diperbarui! ✅');
+    }
+
+    public function targetDestroy($id)
+    {
+        Auth::user()
+            ->targets()
+            ->findOrFail($id)
+            ->delete();
+
+        return redirect()
+            ->route('target')
+            ->with('success', 'Target berhasil dihapus! 🗑️');
     }
 
     public function progress()
