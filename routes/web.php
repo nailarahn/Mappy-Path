@@ -30,7 +30,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/roadmap/{roadmapId}/stage/{stageId}', [DashboardController::class, 'stage'])->name('roadmap.stage');
     Route::post('/roadmap/{roadmapId}/stage/{stageId}/complete', [DashboardController::class, 'completeStage'])->name('roadmap.complete');
 
-    // Target & Progress
-    Route::get('/target',   [DashboardController::class, 'target'])->name('target');
+    
+    // Target Belajar 
+    Route::get('/target',              [DashboardController::class, 'target'])->name('target');
+    Route::get('/target/create',       [DashboardController::class, 'targetCreate'])->name('target.create');
+    Route::post('/target',             [DashboardController::class, 'targetStore'])->name('target.store');
+    Route::get('/target/{id}/edit',    [DashboardController::class, 'targetEdit'])->name('target.edit');
+    Route::put('/target/{id}',         [DashboardController::class, 'targetUpdate'])->name('target.update');
+    Route::delete('/target/{id}',      [DashboardController::class, 'targetDestroy'])->name('target.destroy');
+    
+    // Progress
     Route::get('/progress', [DashboardController::class, 'progress'])->name('progress');
+
+    // Settings
+    Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
 });
