@@ -301,6 +301,18 @@ body { background: var(--white); min-height: 100vh; }
                 </div>
 
                 <div class="form-group">
+                <label class="form-label" for="username">Username</label>
+                <input type="text" id="username" name="username"
+                    class="form-input {{ $errors->has('username') ? 'is-invalid' : '' }}"
+                    placeholder="Contoh: putri_dewi"
+                    value="{{ old('username') }}" autocomplete="username" required>
+                <div class="input-hint">Huruf kecil, angka, dan underscore saja.</div>
+                @error('username')
+                    <div class="input-error">⚠ {{ $message }}</div>
+                @enderror
+            </div>
+
+                <div class="form-group">
                     <label class="form-label" for="jurusan">Jurusan</label>
                     <input type="text" id="jurusan" name="jurusan"
                         class="form-input {{ $errors->has('jurusan') ? 'is-invalid' : '' }}"
@@ -362,6 +374,19 @@ body { background: var(--white); min-height: 100vh; }
                         </button>
                     </div>
                 </div>
+
+                <div class="terms-row">
+                <input type="checkbox" id="terms" name="terms" value="1"
+                    {{ old('terms') ? 'checked' : '' }}>
+                <label for="terms">
+                    Saya menyetujui
+                    <a href="#">syarat & ketentuan</a>
+                    yang berlaku.
+                </label>
+            </div>
+            @error('terms')
+                <div class="input-error" style="margin-top:-1rem; margin-bottom:1rem;">⚠ {{ $message }}</div>
+            @enderror
  
                 <button type="submit" class="btn-register">
                     Daftar Sekarang
