@@ -1,4 +1,6 @@
-@extends('layouts.app', ['title' => 'Pengaturan', 'active' => 'pengaturan'])
+@extends('layouts.dashboard')
+
+@section('title', 'Pengaturan')
 
 @section('content')
 <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Pengaturan</h1>

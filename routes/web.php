@@ -4,6 +4,7 @@ use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SettingController;
 
 // Landing Page
 Route::get('/', function () {
@@ -44,4 +45,9 @@ Route::middleware('auth')->group(function () {
 
     // Settings
     Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
+
+    // Pengaturan
+    Route::get('/pengaturan', [SettingController::class, 'index'])->name('pengaturan.index');
+    Route::put('/pengaturan', [SettingController::class, 'update'])->name('pengaturan.update');
+    Route::put('/pengaturan/password', [SettingController::class, 'updatePassword'])->name('pengaturan.password');
 });
