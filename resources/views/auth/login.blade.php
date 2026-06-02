@@ -31,7 +31,7 @@ body { background: var(--white); min-height: 100vh; }
 
 /* LEFT PANEL */
 .login-left {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--accent) 100%);
+    background: linear-gradient(135deg, #1e1640 0%, var(--primary) 50%, var(--primary-light) 100%);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -42,20 +42,16 @@ body { background: var(--white); min-height: 100vh; }
 .login-left::before {
     content: '';
     position: absolute;
-    top: -30%;
-    right: -20%;
-    width: 400px;
-    height: 400px;
+    top: -30%; right: -20%;
+    width: 400px; height: 400px;
     background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
     pointer-events: none;
 }
 .login-left::after {
     content: '';
     position: absolute;
-    bottom: -20%;
-    left: -10%;
-    width: 300px;
-    height: 300px;
+    bottom: -20%; left: -10%;
+    width: 300px; height: 300px;
     background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
     pointer-events: none;
 }
@@ -65,46 +61,46 @@ body { background: var(--white); min-height: 100vh; }
     width: 40px; height: 40px;
     background: rgba(255,255,255,0.2);
     border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 800;
-    color: white;
-    font-size: 0.95rem;
-    object-fit: contain;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; color: white; font-size: 0.95rem; object-fit: contain;
 }
 .left-brand { font-size: 1.2rem; font-weight: 700; color: white; }
 
-.left-content {
-    z-index: 1;
-}
+.left-content { z-index: 1; }
 .left-tagline {
     font-size: clamp(1.3rem, 2.5vw, 1.7rem);
-    font-weight: 700;
-    color: white;
-    line-height: 1.4;
-    margin-bottom: 1rem;
+    font-weight: 700; color: white; line-height: 1.4; margin-bottom: 1rem;
 }
 .left-sub {
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: rgba(255,255,255,0.75);
-    line-height: 1.6;
+    line-height: 1.6; margin-bottom: 1.5rem;
 }
-.left-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 1.5rem;
+
+/* Stat mini cards for login */
+.login-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
 }
-.chip {
-    background: rgba(255,255,255,0.15);
+.login-stat-card {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 14px;
+    padding: 1rem;
+    backdrop-filter: blur(4px);
+}
+.login-stat-number {
+    font-size: 1.6rem;
+    font-weight: 800;
     color: white;
-    padding: 0.35rem 0.9rem;
-    border-radius: 50px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255,255,255,0.2);
+    line-height: 1;
+}
+.login-stat-label {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.65);
+    margin-top: 0.25rem;
 }
 
 .left-footer { font-size: 0.78rem; color: rgba(255,255,255,0.5); z-index: 1; }
@@ -119,158 +115,76 @@ body { background: var(--white); min-height: 100vh; }
     background: var(--white);
     overflow-y: auto;
 }
-
-.login-form-box {
-    width: 100%;
-    max-width: 420px;
-}
+.login-form-box { width: 100%; max-width: 420px; }
 
 .form-title {
-    font-size: 2.2rem;
-    font-weight: 800;
-    color: var(--primary);
-    margin-bottom: 0.4rem;
+    font-size: 2.2rem; font-weight: 800; color: var(--primary); margin-bottom: 0.4rem;
 }
-.form-subtitle {
-    font-size: 0.95rem;
-    color: var(--gray-400);
-    margin-bottom: 2.5rem;
-}
+.form-subtitle { font-size: 0.95rem; color: var(--gray-400); margin-bottom: 2.5rem; }
 
 .form-group { margin-bottom: 1.4rem; }
 .form-label {
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--gray-700);
-    margin-bottom: 0.5rem;
+    display: block; font-size: 0.875rem; font-weight: 600;
+    color: var(--gray-700); margin-bottom: 0.5rem;
 }
 .form-input {
-    width: 100%;
-    padding: 0.8rem 1rem;
-    border: 1.5px solid var(--gray-200);
-    border-radius: 10px;
-    font-family: var(--font);
-    font-size: 0.9rem;
-    color: var(--gray-800);
-    background: var(--white);
-    transition: all 0.2s;
-    outline: none;
+    width: 100%; padding: 0.8rem 1rem;
+    border: 1.5px solid var(--gray-200); border-radius: 10px;
+    font-family: var(--font); font-size: 0.9rem; color: var(--gray-800);
+    background: var(--white); transition: all 0.2s; outline: none;
 }
 .form-input::placeholder { color: var(--gray-300); }
-.form-input:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(55,36,102,0.08);
-}
+.form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(55,36,102,0.08); }
 .form-input.error { border-color: var(--danger); }
 
 .password-field { position: relative; }
 .password-toggle {
-    position: absolute;
-    right: 0.85rem;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: var(--gray-400);
-    background: none;
-    border: none;
-    padding: 0.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: absolute; right: 0.85rem; top: 50%; transform: translateY(-50%);
+    cursor: pointer; color: var(--gray-400); background: none; border: none;
+    padding: 0.25rem; display: flex; align-items: center; justify-content: center;
     transition: color 0.2s;
 }
 .password-toggle:hover { color: var(--primary); }
 .password-field .form-input { padding-right: 2.8rem; }
 
-.forgot-link {
-    display: block;
-    text-align: right;
-    font-size: 0.8rem;
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 500;
-    margin-top: 0.3rem;
-}
-.forgot-link:hover { text-decoration: underline; }
-
 .remember-row {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1.75rem;
+    display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.75rem;
 }
 .remember-row input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    accent-color: var(--primary);
-    cursor: pointer;
+    width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer;
 }
-.remember-row label {
-    font-size: 0.85rem;
-    color: var(--gray-500);
-    cursor: pointer;
-}
+.remember-row label { font-size: 0.85rem; color: var(--gray-500); cursor: pointer; }
 
 .btn-login {
-    width: 100%;
-    padding: 0.9rem;
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-family: var(--font);
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.25s;
-    letter-spacing: 0.01em;
+    width: 100%; padding: 0.9rem; background: var(--primary);
+    color: white; border: none; border-radius: 10px;
+    font-family: var(--font); font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: all 0.25s; letter-spacing: 0.01em;
 }
 .btn-login:hover {
-    background: var(--primary-light);
-    transform: translateY(-1px);
+    background: var(--primary-light); transform: translateY(-1px);
     box-shadow: 0 6px 20px rgba(55,36,102,0.3);
 }
 .btn-login:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 
 .register-row {
-    text-align: center;
-    margin-top: 1.5rem;
-    font-size: 0.875rem;
-    color: var(--gray-400);
+    text-align: center; margin-top: 1.5rem;
+    font-size: 0.875rem; color: var(--gray-400);
 }
-.register-row a {
-    color: var(--primary);
-    font-weight: 700;
-    text-decoration: none;
-}
+.register-row a { color: var(--primary); font-weight: 700; text-decoration: none; }
 .register-row a:hover { text-decoration: underline; }
 
-/* Alert */
 .alert-danger {
-    background: #fef2f2;
-    border: 1px solid #fecaca;
-    color: #dc2626;
-    border-radius: 10px;
-    padding: 0.85rem 1rem;
-    font-size: 0.875rem;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    background: #fef2f2; border: 1px solid #fecaca; color: #dc2626;
+    border-radius: 10px; padding: 0.85rem 1rem; font-size: 0.875rem;
+    margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;
 }
 
-/* RESPONSIVE */
 @media (max-width: 900px) {
     .login-wrapper { grid-template-columns: 1fr; }
-    .login-left {
-        padding: 2rem;
-        min-height: 220px;
-        justify-content: center;
-        gap: 1rem;
-    }
+    .login-left { padding: 2rem; min-height: 220px; justify-content: center; gap: 1rem; }
     .left-content { text-align: center; }
-    .left-chips { justify-content: center; }
+    .login-stats { max-width: 280px; margin: 0.5rem auto 0; }
     .left-footer { display: none; }
     .login-right { padding: 2rem 1.5rem; }
 }
@@ -294,16 +208,30 @@ body { background: var(--white); min-height: 100vh; }
             </div>
             <span class="left-brand">Mappy Path</span>
         </div>
+
         <div class="left-content">
-            <div class="left-tagline">Daftar untuk menggunakan MappyPath!</div>
-            <p class="left-sub">Belajar, nggak perlu bingung.</p>
-            <div class="left-chips">
-                <span class="chip">🗺️ Roadmap Terstruktur</span>
-                <span class="chip">📊 Pantau Progress</span>
-                <span class="chip">🎯 Target Belajar</span>
-                <span class="chip">🏆 Badge & Reward</span>
+            <div class="left-tagline">Halo, sudah kembali! 👋</div>
+            <p class="left-sub">Yuk, lanjut belajar dari mana kamu berhenti.</p>
+            <div class="login-stats">
+                <div class="login-stat-card">
+                    <div class="login-stat-number">56+</div>
+                    <div class="login-stat-label">📚 Materi tersedia</div>
+                </div>
+                <div class="login-stat-card">
+                    <div class="login-stat-number">4 CP</div>
+                    <div class="login-stat-label">📋 Capaian Pembelajaran</div>
+                </div>
+                <div class="login-stat-card">
+                    <div class="login-stat-number">1K+</div>
+                    <div class="login-stat-label">🎓 Siswa aktif</div>
+                </div>
+                <div class="login-stat-card">
+                    <div class="login-stat-number">100%</div>
+                    <div class="login-stat-label">✨ Gratis selamanya</div>
+                </div>
             </div>
         </div>
+
         <div class="left-footer">© 2026 Mappy Path. All rights reserved.</div>
     </div>
 
@@ -329,13 +257,13 @@ body { background: var(--white); min-height: 100vh; }
                 @csrf
 
                 <div class="form-group">
-                    <label class="form-label" for="email">Email atau Username</label>
+                    <label class="form-label" for="email">Email</label>
                     <input
                         type="text"
                         id="email"
                         name="email"
                         class="form-input {{ $errors->has('email') ? 'error' : '' }}"
-                        placeholder="Masukkan email atau ID kamu"
+                        placeholder="Masukkan emailmu"
                         value="{{ old('email') }}"
                         autocomplete="username"
                     >
@@ -374,7 +302,7 @@ body { background: var(--white); min-height: 100vh; }
             </form>
 
             <div class="register-row">
-                Tidak Punya Akun? <a href="{{ route('login') }}">Daftar</a>
+                Tidak Punya Akun? <a href="{{ route('register') }}">Daftar</a>
             </div>
         </div>
     </div>
