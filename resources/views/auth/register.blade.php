@@ -230,7 +230,7 @@ body { background: var(--white); min-height: 100vh; }
                 </div>
                 <div class="benefit-item">
                     <div class="benefit-check">✓</div>
-                    56+ materi video & artikel berkualitas
+                    15+materi video & artikel berkualitas
                 </div>
                 <div class="benefit-item">
                     <div class="benefit-check">✓</div>
@@ -282,7 +282,7 @@ body { background: var(--white); min-height: 100vh; }
                     <label class="form-label" for="name">Nama Lengkap</label>
                     <input type="text" id="name" name="name"
                         class="form-input {{ $errors->has('name') ? 'is-invalid' : '' }}"
-                        placeholder="Masukkan nama lengkapmu"
+                        placeholder="Masukkan nama lengkap"
                         value="{{ old('name') }}" autocomplete="name" required>
                     @error('name')
                         <div class="input-error">⚠ {{ $message }}</div>
@@ -293,7 +293,7 @@ body { background: var(--white); min-height: 100vh; }
                     <label class="form-label" for="email">Email</label>
                     <input type="email" id="email" name="email"
                         class="form-input {{ $errors->has('email') ? 'is-invalid' : '' }}"
-                        placeholder="Masukkan emalimu"
+                        placeholder="Masukkan email"
                         value="{{ old('email') }}" autocomplete="email" required>
                     @error('email')
                         <div class="input-error">⚠ {{ $message }}</div>
@@ -316,7 +316,7 @@ body { background: var(--white); min-height: 100vh; }
                     <label class="form-label" for="jurusan">Jurusan</label>
                     <input type="text" id="jurusan" name="jurusan"
                         class="form-input {{ $errors->has('jurusan') ? 'is-invalid' : '' }}"
-                        placeholder="Masukkan jurusanmu"
+                        placeholder="Masukkan jurusan"
                         value="{{ old('jurusan') }}" required>
                     @error('jurusan')
                         <div class="input-error">⚠ {{ $message }}</div>
@@ -328,7 +328,7 @@ body { background: var(--white); min-height: 100vh; }
                     <div class="password-field">
                         <input type="password" id="password" name="password"
                             class="form-input {{ $errors->has('password') ? 'is-invalid' : '' }}"
-                            placeholder="Masukkan passwordmu"
+                            placeholder="Masukkan password"
                             autocomplete="new-password"
                             oninput="checkStrength(this.value)" required>
                         <button type="button" class="password-toggle" onclick="togglePass('password','eyeOff1','eyeOn1')">
@@ -360,7 +360,7 @@ body { background: var(--white); min-height: 100vh; }
                     <label class="form-label" for="password_confirmation">Konfirmasi Password</label>
                     <div class="password-field">
                         <input type="password" id="password_confirmation" name="password_confirmation"
-                            class="form-input" placeholder="Ulangi passwordmu"
+                            class="form-input" placeholder="Ulangi password"
                             autocomplete="new-password" required>
                         <button type="button" class="password-toggle" onclick="togglePass('password_confirmation','eyeOff2','eyeOn2')">
                             <svg id="eyeOff2" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

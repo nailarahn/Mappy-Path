@@ -214,7 +214,7 @@ body { background: var(--white); min-height: 100vh; }
             <p class="left-sub">Yuk, lanjut belajar dari mana kamu berhenti.</p>
             <div class="login-stats">
                 <div class="login-stat-card">
-                    <div class="login-stat-number">56+</div>
+                    <div class="login-stat-number">15+</div>
                     <div class="login-stat-label">📚 Materi tersedia</div>
                 </div>
                 <div class="login-stat-card">
@@ -239,7 +239,7 @@ body { background: var(--white); min-height: 100vh; }
     <div class="login-right">
         <div class="login-form-box">
             <h1 class="form-title">Masuk</h1>
-            <p class="form-subtitle">Masuk ke akunmu</p>
+            <p class="form-subtitle">Masuk ke akun</p>
 
             @if ($errors->any())
                 <div class="alert-danger">
@@ -263,7 +263,7 @@ body { background: var(--white); min-height: 100vh; }
                         id="email"
                         name="email"
                         class="form-input {{ $errors->has('email') ? 'error' : '' }}"
-                        placeholder="Masukkan emailmu"
+                        placeholder="Masukkan email"
                         value="{{ old('email') }}"
                         autocomplete="username"
                     >
@@ -277,7 +277,7 @@ body { background: var(--white); min-height: 100vh; }
                             id="password"
                             name="password"
                             class="form-input {{ $errors->has('password') ? 'error' : '' }}"
-                            placeholder="Masukkan passwordmu"
+                            placeholder="Masukkan password"
                             autocomplete="current-password"
                         >
                         <button type="button" class="password-toggle" onclick="togglePassword()" id="toggleBtn">
