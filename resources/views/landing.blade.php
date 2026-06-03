@@ -852,8 +852,8 @@ a.feature-card {
         <a href="{{ auth()->check() ? route('roadmap') : route('register') }}" class="feature-card reveal">
             <div class="feature-card-arrow">→</div>
             <div class="feature-icon-wrap">📚</div>
-            <div class="feature-title">56+ Materi Lengkap</div>
-            <div class="feature-desc">Video, artikel, dan latihan soal berdasarkan CP 1, 2, 4 & 6 yang selalu diperbarui sesuai teknologi terkini.</div>
+            <div class="feature-title">15+ Materi Lengkap</div>
+            <div class="feature-desc">Video berdasarkan CP 1, 2, 4 & 6 yang selalu diperbarui sesuai teknologi terkini.</div>
             <span class="feature-tag">CP-Based Content</span>
         </a>
 
@@ -871,7 +871,7 @@ a.feature-card {
 <!-- STATS STRIP -->
 <div class="stats-strip reveal">
     <div class="stat-item">
-        <div class="stat-number">56<span>+</span></div>
+        <div class="stat-number">15<span>+</span></div>
         <div class="stat-label">📚 Total Materi</div>
     </div>
     <div class="stat-item">
@@ -922,7 +922,7 @@ a.feature-card {
     <div class="cta-box reveal">
         <span class="cta-emoji">🚀</span>
         <h2 class="cta-title">Siap memulai perjalanan belajarmu?</h2>
-        <p class="cta-desc">Bergabung bersama 1000+ siswa SMK TKJ yang sudah belajar lebih terstruktur bersama Mappy Path. Gratis selamanya.</p>
+        <p class="cta-desc">Bergabung bersama 1K+ siswa SMK TKJ yang sudah belajar lebih terstruktur bersama Mappy Path. Gratis selamanya.</p>
         <a href="{{ route('register') }}" class="btn-cta-white">
             Daftar Sekarang — Gratis! ✨
         </a>

@@ -114,115 +114,83 @@ class DatabaseSeeder extends Seeder
             'slug'            => 'konsep-jaringan-komunikasi-data',
             'level'           => 'intermediate',
             'category'        => 'networking',
-            'total_stages'    => 13,
+            'total_stages'    => 9,
             'estimated_hours' => 45,
             'order'           => 2,
         ]);
 
         $s2data = [
             [
-                'Konsep Dasar Jaringan',
-                'Model OSI Layer',
-                'Memahami 7 lapisan OSI Model dan fungsi tiap lapisan.',
-                'https://youtu.be/vv4y_uOneC0?si=JF1v5GZ2Q8R9X5YV',
+                'Konsep Jaringan Dasar',
+                'IPv4 & IPv6',
+                'Memahami dasar sistem pengalamatan IP.',
+                'https://youtu.be/lP-gtvo_cuc?si=dojRSjM-lYM2iuCB',
                 20,
-                "7 lapisan OSI\nFungsi setiap lapisan\nAlur pengiriman data\nEncapsulation & Decapsulation",
+                "IPv4\nIPv6\nPerbedaan IP\nFungsi IP address",
             ],
             [
-                'Konsep Dasar Jaringan',
+                'Konsep Jaringan Dasar',
                 'TCP/IP Model',
                 'Memahami model TCP/IP sebagai dasar komunikasi internet.',
-                'https://www.youtube.com/watch?v=OTwp3xtd4dg',
-                15,
+                'https://youtu.be/0RedyOvvkM0?si=2tHHAm8wZhWyQ7hA',
+                20,
                 "4 lapisan TCP/IP\nPerbandingan OSI vs TCP/IP\nBagaimana internet bekerja\nProtokol tiap lapisan",
             ],
             [
-                'Konsep Dasar Jaringan',
-                'Encapsulation & Alur Data',
-                'Memahami proses enkapsulasi dan alur pengiriman data di jaringan.',
-                'https://www.youtube.com/watch?v=vv4y_uOneC0',
-                15,
-                "Proses encapsulation\nProses decapsulation\nPDU (Protocol Data Unit)\nAlur data end-to-end",
+                'Konsep Jaringan Dasar',
+                'Networking Service',
+                'Memahami layanan jaringan dasar.',
+                'https://youtu.be/5a71GbrNC8U?si=T6UdHnqTPb-_Aeys',
+                20,
+                "DNS\nDHCP\nHTTP\nFTP",
             ],
             [
                 'Komunikasi Data',
-                'Mode Komunikasi Data',
-                'Mengenal simplex, half duplex, dan full duplex.',
-                'https://www.youtube.com/watch?v=H7-NR3Q3BeI',
-                12,
-                "Simplex\nHalf Duplex\nFull Duplex\nContoh penggunaan nyata",
+                'Keamanan Jaringan Telekomunikasi',
+                'Dasar keamanan jaringan telekomunikasi.',
+                'https://youtu.be/rr24pcYNb-E?si=5NwUDhtVaoxROleZ',
+                20,
+                "Firewall\nEnkripsi\nAncaman jaringan\nProteksi data",
             ],
             [
                 'Komunikasi Data',
-                'Media Transmisi & Bandwidth',
-                'Jenis media transmisi data dan konsep bandwidth.',
-                'https://www.youtube.com/watch?v=H7-NR3Q3BeI',
-                12,
-                "Media kabel (UTP, Fiber)\nMedia nirkabel\nPengertian bandwidth\nLatency dan throughput",
+                'Sistem Seluler',
+                'Mengenal jaringan seluler modern.',
+                'https://youtu.be/FISGFwPR5mo?si=siHi7FXy0Vl13Dce',
+                20,
+                "2G 3G 4G 5G\nBase station\nSIM card\nMobile network",
             ],
             [
-                'Protokol Jaringan',
-                'Protokol TCP & UDP',
-                'Perbedaan TCP dan UDP serta penggunaannya.',
-                'https://www.youtube.com/watch?v=OTwp3xtd4dg',
-                15,
-                "Cara kerja TCP\nCara kerja UDP\nPerbedaan TCP vs UDP\nKapan menggunakan masing-masing",
+                'Telekomunikasi',
+                'Microwave System',
+                'Teknologi komunikasi microwave.',
+                'https://youtu.be/d7uVG7YSRiE?si=VQAmMEc6GW9hQzk1',
+                20,
+                "Gelombang mikro\nLine of sight\nTransmisi data\nAntena microwave",
             ],
             [
-                'Protokol Jaringan',
-                'Protokol HTTP, DNS, dan DHCP',
-                'Memahami protokol aplikasi yang sering digunakan.',
-                'https://www.youtube.com/watch?v=OTwp3xtd4dg',
-                15,
-                "Cara kerja HTTP/HTTPS\nProses resolusi DNS\nCara kerja DHCP\nPort number protokol",
+                'Telekomunikasi',
+                'VSAT IP',
+                'Sistem komunikasi satelit VSAT.',
+                'https://youtu.be/f6SEQhe1cNs?si=LVAapbopenn8dXTO',
+                20,
+                "VSAT\nSatelit komunikasi\nRemote area network\nInternet satelit",
             ],
             [
-                'Pengalamatan IP',
-                'IP Address IPv4',
-                'Konsep dasar pengalamatan IP versi 4.',
-                'https://www.youtube.com/watch?v=ddM9AcreVqY',
-                18,
-                "Format IPv4\nKelas IP (A, B, C, D, E)\nNetwork ID dan Host ID\nIP Private vs Public",
+                'Telekomunikasi',
+                'Fiber Optic',
+                'Komunikasi menggunakan serat optik.',
+                'https://youtu.be/wBfRcaliKjE?si=EomKGaBamvpiAR3A',
+                20,
+                "Serat optik\nKecepatan cahaya\nTransmisi data\nBandwidth tinggi",
             ],
             [
-                'Pengalamatan IP',
-                'Subnet Mask & CIDR',
-                'Memahami subnet mask dan notasi CIDR.',
-                'https://www.youtube.com/watch?v=ddM9AcreVqY',
-                15,
-                "Fungsi subnet mask\nNotasi CIDR\nDefault subnet tiap kelas\nContoh penerapan",
-            ],
-            [
-                'Pengalamatan IP',
-                'Subnetting Jaringan',
-                'Teknik menghitung dan membagi subnet.',
-                'https://www.youtube.com/watch?v=ecCuyq-Wprc',
-                25,
-                "Konsep subnetting\nMenghitung jumlah subnet\nMenghitung jumlah host\nNetwork & Broadcast address\nRange IP yang valid",
-            ],
-            [
-                'Pengalamatan IP',
-                'Latihan Soal Subnetting',
-                'Praktik menyelesaikan soal subnetting.',
-                'https://www.youtube.com/watch?v=ecCuyq-Wprc',
-                25,
-                "Soal subnetting class C\nSoal subnetting class B\nMenentukan network address\nMenentukan broadcast address\nRange IP valid",
-            ],
-            [
-                'Keamanan Jaringan Dasar',
-                'Ancaman Keamanan Jaringan',
-                'Mengenal jenis ancaman keamanan jaringan.',
-                'https://www.youtube.com/watch?v=sWbUDq4S6Y8',
-                15,
-                "Jenis-jenis malware\nSerangan jaringan umum\nPhishing dan social engineering\nDampak serangan siber",
-            ],
-            [
-                'Keamanan Jaringan Dasar',
-                'Konsep Keamanan & Firewall',
-                'Dasar-dasar pengamanan jaringan.',
-                'https://www.youtube.com/watch?v=sWbUDq4S6Y8',
-                15,
-                "Fungsi firewall\nPassword security\nPrinsip CIA (Confidentiality, Integrity, Availability)\nBest practice keamanan",
+                'Wireless',
+                'WLAN',
+                'Teknologi jaringan nirkabel.',
+                'https://youtu.be/85k0sn7ZYoE?si=dLnVgsE9RdE26qsa',
+                20,
+                "WiFi\nAccess point\nWireless network\nKeamanan WLAN",
             ],
         ];
 
@@ -245,67 +213,67 @@ class DatabaseSeeder extends Seeder
         $r2->update(['total_stages' => count($stageIds2)]);
 
         // ==========================================
-        // ROADMAP 3 - Administrasi Server Linux (advanced)
+        // ROADMAP 3 - Proses Bisnis & Teknologi Jaringan Modern (advanced) - CP 1 & CP 2
         // ==========================================
         $r3 = Roadmap::create([
-            'title'           => 'Administrasi Server Linux',
-            'description'     => 'Kuasai administrasi server Linux untuk dunia kerja teknisi jaringan.',
-            'slug'            => 'administrasi-server-linux',
+            'title'           => 'Proses Bisnis & Teknologi Jaringan Modern',
+            'description'     => 'Tahap akhir TKJ: proses bisnis, peran teknisi, cloud computing, IoT, dan virtualisasi (CP 1 & CP 2).',
+            'slug'            => 'proses-bisnis-teknologi-jaringan',
             'level'           => 'advanced',
-            'category'        => 'server',
+            'category'        => 'networking',
             'total_stages'    => 6,
-            'estimated_hours' => 40,
-            'order'           => 3,
+            'estimated_hours' => 20,
+            'order'           => 4,
         ]);
 
         $s3data = [
             [
-                'Dasar Linux',
-                'Pengenalan Linux',
-                'Mengenal sistem operasi Linux dan instalasi Ubuntu.',
-                'https://www.youtube.com/watch?v=sWbUDq4S6Y8',
+                'Proses Bisnis Jaringan',
+                'Proses Bisnis di Bidang Jaringan',
+                'Memahami alur kerja dan peran teknisi jaringan di industri.',
+                'https://youtu.be/zq4rOPsIcZU?si=s2ijkaVy3AMUUQv-',
                 20,
-                "Sejarah Linux\nDistribusi Linux (Ubuntu, CentOS, Debian)\nLinux vs Windows\nInstalasi Ubuntu Server",
+                "Peran teknisi jaringan\nAlur kerja di industri\nDokumentasi jaringan\nKomunikasi dengan klien",
             ],
             [
-                'Dasar Linux',
-                'Command Line Linux',
-                'Menguasai perintah dasar terminal Linux.',
-                'https://www.youtube.com/watch?v=IVquJh3DXUA',
-                30,
-                "Navigasi direktori (ls, cd, pwd)\nManajemen file (cp, mv, rm, mkdir)\nPermission dan ownership\nPipe dan redirect",
+                'Proses Bisnis Jaringan',
+                'Maintenance Jaringan',
+                'Proses pemeliharaan jaringan secara berkala.',
+                'https://youtu.be/G-bIiAA_dNo?si=T7caT-vHVnx75puV',
+                20,
+                "Pengecekan jaringan\nUpdate perangkat\nMonitoring sistem\nJadwal maintenance",
             ],
             [
-                'Administrasi Server',
-                'Manajemen User & Group',
-                'Mengelola user, group, dan hak akses di Linux.',
-                'https://www.youtube.com/watch?v=jwnvKOjmtEA',
+                'Proses Bisnis Jaringan',
+                'Troubleshooting Dasar',
+                'Metode dasar mengatasi masalah jaringan.',
+                'https://youtu.be/ZQ2YB5ihyFM?si=whzz7C09qFtpN5R8',
                 25,
-                "Membuat dan menghapus user\nManajemen group\nHak akses sudo dan root\nPermission rwx (chmod, chown)",
+                "Identifikasi masalah\nTools jaringan\nAnalisis gangguan\nSolusi error",
             ],
             [
-                'Administrasi Server',
-                'Instalasi & Konfigurasi Web Server',
-                'Instalasi Apache dan konfigurasi virtual host.',
-                'https://www.youtube.com/watch?v=1CDxpAzvLKY',
-                35,
-                "Instalasi Apache2\nKonfigurasi Virtual Host\nManajemen service (start, stop, restart)\nUji coba web server",
+                'Teknologi Modern',
+                'Cloud Computing',
+                'Konsep layanan komputasi berbasis cloud.',
+                'https://youtu.be/iw3pCL8UiX8?si=gDiPzprgfnYNu7nZ',
+                20,
+                "Pengertian cloud computing\nModel layanan: IaaS\nPaaS\nSaaS\nCloud deployment",
             ],
             [
-                'Jaringan Linux',
-                'Konfigurasi Jaringan di Linux',
-                'Mengatur IP statis, DNS, SSH, dan firewall.',
-                'https://www.youtube.com/watch?v=XbxFHRPzDuc',
-                30,
-                "Konfigurasi IP statis\nPengaturan DNS dan hostname\nFirewall dengan UFW\nAkses remote via SSH",
+                'Teknologi Modern',
+                'Internet of Things (IoT)',
+                'Konsep IoT dan penerapannya dalam kehidupan nyata.',
+                'https://youtu.be/n-f8B76Hozk?si=26L6ph1xP0dgkb4H',
+                20,
+                "Pengertian IoT\nKomponen sistem IoT\nProtokol IoT (MQTT)\nContoh implementasi IoT",
             ],
             [
-                'Jaringan Linux',
-                'Backup, Monitoring & Troubleshooting',
-                'Strategi backup, monitoring server, dan troubleshooting dasar.',
-                'https://www.youtube.com/watch?v=1ehpCssFAYI',
-                30,
-                "Strategi backup data\nOtomasi dengan cron job\nMonitoring dengan htop dan df\nAnalisis log server\nTroubleshooting koneksi",
+                'Teknologi Modern',
+                'Virtualisasi Jaringan',
+                'Teknologi membuat sistem virtual dalam satu perangkat fisik.',
+                'https://youtu.be/fckgHc2JwQs?si=D-mIlactMpdc3apu',
+                20,
+                "Virtual machine\nHypervisor\nCloud infrastructure\nEfisiensi server",
             ],
         ];
 
@@ -326,164 +294,6 @@ class DatabaseSeeder extends Seeder
             $stageIds3[] = $st->id;
         }
         $r3->update(['total_stages' => count($stageIds3)]);
-
-        // ==========================================
-        // ROADMAP 4 - Proses Bisnis & Teknologi Jaringan Modern (advanced) - CP 1 & CP 2
-        // ==========================================
-        $r4 = Roadmap::create([
-            'title'           => 'Proses Bisnis & Teknologi Jaringan Modern',
-            'description'     => 'Tahap akhir TKJ: proses bisnis, peran teknisi, cloud computing, IoT, dan virtualisasi (CP 1 & CP 2).',
-            'slug'            => 'proses-bisnis-teknologi-jaringan',
-            'level'           => 'advanced',
-            'category'        => 'networking',
-            'total_stages'    => 6,
-            'estimated_hours' => 20,
-            'order'           => 4,
-        ]);
-
-        $s4data = [
-            [
-                'Proses Bisnis Jaringan',
-                'Alur Kerja Teknisi Jaringan',
-                'Memahami peran dan alur kerja seorang teknisi jaringan di dunia industri.',
-                'https://www.youtube.com/watch?v=sWbUDq4S6Y8',
-                20,
-                "Peran teknisi jaringan\nAlur kerja di industri\nDokumentasi jaringan\nKomunikasi dengan klien",
-            ],
-            [
-                'Proses Bisnis Jaringan',
-                'Maintenance Jaringan',
-                'Prosedur perawatan dan pemeliharaan jaringan.',
-                'https://www.youtube.com/watch?v=1ehpCssFAYI',
-                20,
-                "Jadwal maintenance\nPengecekan performa jaringan\nUpdate firmware perangkat\nDokumentasi hasil maintenance",
-            ],
-            [
-                'Proses Bisnis Jaringan',
-                'Troubleshooting Jaringan',
-                'Metode sistematis dalam menyelesaikan masalah jaringan.',
-                'https://www.youtube.com/watch?v=IVquJh3DXUA',
-                25,
-                "Metode troubleshooting\nTools: ping, traceroute, ipconfig\nIdentifikasi masalah umum\nEskalasi masalah",
-            ],
-            [
-                'Teknologi Masa Depan',
-                'Cloud Computing',
-                'Mengenal konsep dan layanan cloud computing.',
-                'https://www.youtube.com/watch?v=M988_fsOSWo',
-                20,
-                "Pengertian cloud computing\nModel layanan: IaaS, PaaS, SaaS\nCloud publik vs privat\nContoh: AWS, GCP, Azure",
-            ],
-            [
-                'Teknologi Masa Depan',
-                'Internet of Things (IoT)',
-                'Konsep IoT dan penerapannya dalam kehidupan nyata.',
-                'https://www.youtube.com/watch?v=LlhmzVL5bm8',
-                20,
-                "Pengertian IoT\nKomponen sistem IoT\nProtokol IoT (MQTT)\nContoh implementasi IoT",
-            ],
-            [
-                'Teknologi Masa Depan',
-                'Virtualisasi Jaringan',
-                'Konsep virtualisasi dan penerapannya di jaringan modern.',
-                'https://www.youtube.com/watch?v=FZR0rG3HKIk',
-                20,
-                "Pengertian virtualisasi\nVirtual Machine (VM)\nHypervisor tipe 1 dan 2\nManfaat virtualisasi di jaringan",
-            ],
-        ];
-
-        $stageIds4 = [];
-        foreach ($s4data as $i => $s) {
-            $st = Stage::create([
-                'roadmap_id'        => $r4->id,
-                'group_label'       => $s[0],
-                'title'             => $s[1],
-                'description'       => $s[2],
-                'content_url'       => $s[3],
-                'type'              => 'video',
-                'estimated_minutes' => $s[4],
-                'learning_points'   => $s[5],
-                'order'             => $i + 1,
-                'is_active'         => true,
-            ]);
-            $stageIds4[] = $st->id;
-        }
-        $r4->update(['total_stages' => count($stageIds4)]);
-
-        // ==========================================
-        // ROADMAP 5 - Cisco Networking CCNA (advanced)
-        // ==========================================
-        $r5 = Roadmap::create([
-            'title'           => 'Cisco Networking (CCNA)',
-            'description'     => 'Persiapan sertifikasi CCNA: VLAN, Routing, ACL, dan NAT pada perangkat Cisco.',
-            'slug'            => 'cisco-networking-ccna',
-            'level'           => 'advanced',
-            'category'        => 'networking',
-            'total_stages'    => 5,
-            'estimated_hours' => 60,
-            'order'           => 5,
-        ]);
-
-        $s5data = [
-            [
-                'VLAN & Switching',
-                'Konfigurasi VLAN',
-                'Memahami dan mengkonfigurasi VLAN pada switch Cisco.',
-                'https://www.youtube.com/watch?v=MmwF1oHOvmg',
-                35,
-                "Konsep dan manfaat VLAN\nKonfigurasi VLAN di Cisco\nTrunk port (802.1Q)\nInter-VLAN routing",
-            ],
-            [
-                'VLAN & Switching',
-                'Spanning Tree Protocol (STP)',
-                'Memahami STP untuk mencegah loop pada jaringan switched.',
-                'https://www.youtube.com/watch?v=japdEY1UKe4',
-                30,
-                "Masalah broadcast loop\nCara kerja STP\nPemilihan Root Bridge\nRSTP dan PVST+",
-            ],
-            [
-                'Routing',
-                'Static & Dynamic Routing',
-                'Konfigurasi routing statis dan dinamis pada router Cisco.',
-                'https://www.youtube.com/watch?v=Ep-x_6kggKA',
-                40,
-                "Static routing\nDynamic routing dengan RIP\nOSPF dasar\nBGP overview",
-            ],
-            [
-                'Security',
-                'Access Control List (ACL)',
-                'Mengamankan jaringan menggunakan ACL pada Cisco.',
-                'https://www.youtube.com/watch?v=fBCof0HO-1s',
-                35,
-                "Standard ACL\nExtended ACL\nNamed ACL\nPenerapan keamanan jaringan",
-            ],
-            [
-                'Security',
-                'NAT & PAT Configuration',
-                'Konfigurasi translasi alamat IP dengan NAT dan PAT.',
-                'https://www.youtube.com/watch?v=wg8Hosr20yw',
-                30,
-                "Konsep NAT\nStatic dan Dynamic NAT\nPAT (Port Address Translation)\nKonfigurasi di Cisco IOS",
-            ],
-        ];
-
-        $stageIds5 = [];
-        foreach ($s5data as $i => $s) {
-            $st = Stage::create([
-                'roadmap_id'        => $r5->id,
-                'group_label'       => $s[0],
-                'title'             => $s[1],
-                'description'       => $s[2],
-                'content_url'       => $s[3],
-                'type'              => 'video',
-                'estimated_minutes' => $s[4],
-                'learning_points'   => $s[5],
-                'order'             => $i + 1,
-                'is_active'         => true,
-            ]);
-            $stageIds5[] = $st->id;
-        }
-        $r5->update(['total_stages' => count($stageIds5)]);
 
         // ==========================================
         // ENROLLMENT - User ke R1 (aktif, sedang berjalan)
