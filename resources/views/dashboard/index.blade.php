@@ -110,43 +110,60 @@ canvas { max-width: 100%; }
 @section('content')
 
 <div class="page-header">
-    <div class="page-greeting">Halo, <span>{{ explode(' ', Auth::user()->name)[0] }}!</span> 👋</div>
+    <div class="page-greeting">
+        Halo, <span>{{ explode(' ', Auth::user()->name)[0] }}!</span> 👋
+    </div>
     <div class="page-sub">Semangat belajar hari ini!</div>
 </div>
+
+@if(!$activeEnrollment)
+    <div class="alert alert-info mb-4">
+        🎉 Selamat datang di MappyPath! Kamu belum memilih roadmap belajar.
+        Yuk mulai dengan memilih roadmap yang tersedia.
+    </div>
+@endif
 
 <!-- STAT CARDS -->
 <div class="stat-cards">
 
     <a href="{{ route('progress') }}" class="stat-card-link">
-        <div class="stat-card">
-            <div class="stat-card-header">
-                <span class="stat-label">Total Progress</span>
-                <div class="stat-icon" style="background:#ede9ff;">📊</div>
-            </div>
-            <div class="stat-value">75%</div>
-            <div class="stat-progress">
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width:75%"></div>
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <span class="stat-label">Total Progress</span>
+            <div class="stat-icon" style="background:#ede9ff;">📊</div>
+        </div>
+
+        <div class="stat-value">
+            {{ $activeEnrollment?->progress ?? 0 }}%
+        </div>
+
+        <div class="stat-progress">
+            <div class="progress-bar">
+                <div class="progress-fill"
+                     style="width:{{ $activeEnrollment?->progress ?? 0 }}%">
                 </div>
             </div>
         </div>
-    </a>
+    </div>
+</a>
 
     <a href="{{ route('roadmap') }}" class="stat-card-link">
-        <div class="stat-card">
-            <div class="stat-card-header">
-                <span class="stat-label">Tahap saat ini</span>
-                <div class="stat-icon" style="background:#fff7ed;">📖</div>
-            </div>
-            <div class="stat-value" style="font-size:1.1rem;font-weight:700;margin-top:.25rem;">
-                Jaringan Dasar TKJ
-            </div>
-            <div class="stat-progress">
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width:65%"></div>
-                </div>
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <span class="stat-label">Tahap saat ini</span>
+            <div class="stat-icon" style="background:#fff7ed;">📖</div>
+        </div>
+
+        <div class="stat-value" style="font-size:1.1rem;font-weight:700;margin-top:.25rem;">
+            {{ $activeEnrollment?->roadmap?->title ?? 'Belum Memilih Roadmap' }}
+        </div>
+
+        <div class="stat-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width:{{ $activeEnrollment?->progress ?? 0 }}%"></div>
             </div>
         </div>
+    </div>
     </a>
 
     <a href="{{ route('roadmap') }}" class="stat-card-link">
@@ -188,24 +205,56 @@ canvas { max-width: 100%; }
 <!-- LANJUTKAN & REKOMENDASI -->
 <div class="grid-2" style="margin-bottom:1.5rem;">
     <!-- Lanjutkan Belajar -->
-    <div class="card">
-        <div class="card-header">Lanjutkan Belajar</div>
-        <div class="card-body">
-            <div class="continue-card" style="border:none;padding:0;">
-                <div class="continue-icon">🔗</div>
-                <div class="continue-info">
-                    <div class="continue-title">Dasar Jaringan</div>
-                    <div class="continue-stage">Tahap 2 dari 8</div>
+<div class="card">
+    <div class="card-header">Lanjutkan Belajar</div>
+    <div class="card-body">
+        <div class="continue-card" style="border:none;padding:0;">
+            <div class="continue-icon">🔗</div>
+
+            <div class="continue-info">
+
+                @if($activeEnrollment)
+
+                    <div class="continue-title">
+                        {{ $activeEnrollment->roadmap->title }}
+                    </div>
+
+                    <div class="continue-stage">
+                        Progress {{ $activeEnrollment->progress }}%
+                    </div>
+
                     <div class="continue-progress">
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width:25%"></div>
+                            <div class="progress-fill"
+                                 style="width:{{ $activeEnrollment->progress }}%">
+                            </div>
                         </div>
                     </div>
-                    <a href="{{ route('roadmap') }}" class="btn btn-primary btn-sm">Lanjutkan →</a>
-                </div>
+
+                    <a href="{{ route('roadmap') }}" class="btn btn-primary btn-sm">
+                        Lanjutkan →
+                    </a>
+
+                @else
+
+                    <div class="continue-title">
+                        Belum ada roadmap aktif
+                    </div>
+
+                    <div class="continue-stage">
+                        Pilih roadmap untuk mulai belajar
+                    </div>
+
+                    <a href="{{ route('roadmap') }}" class="btn btn-primary btn-sm">
+                        Pilih Roadmap
+                    </a>
+
+                @endif
+
             </div>
         </div>
     </div>
+</div>
 
     <!-- Rekomendasi -->
 <div class="card">
