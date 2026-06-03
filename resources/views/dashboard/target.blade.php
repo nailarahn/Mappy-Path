@@ -4,12 +4,10 @@
 
 @push('styles')
 <style>
-  /* ── Page header ── */
   .page-hdr { margin-bottom: 24px; }
   .page-hdr h1 { font-size: 28px; font-weight: 800; color: var(--gray-800); }
   .page-hdr p  { color: var(--gray-400); font-size: 14px; margin-top: 4px; }
 
-  /* ── Add button ── */
   .btn-add {
     display: inline-flex; align-items: center; gap: 10px;
     background: var(--primary);
@@ -18,7 +16,6 @@
     text-decoration: none; cursor: pointer;
     box-shadow: 0 4px 16px rgba(55,36,102,.25);
     transition: all .2s; margin-bottom: 28px;
-    font-family: var(--font);
   }
   .btn-add:hover { background: var(--primary-light); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(55,36,102,.35); color: #fff; }
   .btn-add-plus {
@@ -28,13 +25,8 @@
     font-size: 16px; font-weight: 700; line-height: 1;
   }
 
-  /* ── Section title ── */
-  .section-title {
-    font-size: 15px; font-weight: 700; color: var(--gray-800);
-    margin-bottom: 14px;
-  }
+  .section-title { font-size: 15px; font-weight: 700; color: var(--gray-800); margin-bottom: 14px; }
 
-  /* ══ EMPTY STATE ══ */
   .empty-card {
     background: #fff; border-radius: 16px;
     border: 1.5px solid var(--gray-200);
@@ -50,7 +42,6 @@
   .empty-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; color: var(--gray-800); }
   .empty-card p  { color: var(--gray-400); font-size: 13px; max-width: 320px; margin: 0 auto; line-height: 1.6; }
 
-  /* ══ TARGET CARD ══ */
   .targets-list { display: flex; flex-direction: column; gap: 12px; }
 
   .t-card {
@@ -59,12 +50,8 @@
     padding: 20px 24px;
     transition: box-shadow .2s, transform .2s;
   }
-  .t-card:hover {
-    box-shadow: 0 6px 24px rgba(55,36,102,.08);
-    transform: translateY(-1px);
-  }
+  .t-card:hover { box-shadow: 0 6px 24px rgba(55,36,102,.08); transform: translateY(-1px); }
 
-  /* top row */
   .t-top {
     display: flex; align-items: center;
     justify-content: space-between; gap: 12px; margin-bottom: 16px;
@@ -80,13 +67,9 @@
   .t-icon svg { width: 24px; height: 24px; color: var(--primary); }
 
   .t-name { font-size: 15px; font-weight: 700; color: var(--gray-800); margin-bottom: 4px; }
-  .t-date {
-    display: flex; align-items: center; gap: 5px;
-    font-size: 12px; color: var(--gray-400); font-weight: 500;
-  }
+  .t-date { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--gray-400); font-weight: 500; }
   .t-date svg { width: 13px; height: 13px; }
 
-  /* action buttons */
   .t-actions { display: flex; gap: 8px; flex-shrink: 0; }
   .btn-act {
     width: 34px; height: 34px; border-radius: 8px;
@@ -98,32 +81,19 @@
   .btn-act.del:hover  { background: #fef2f2; color: #dc2626; border-color: #fca5a5; }
   .btn-act svg { width: 15px; height: 15px; }
 
-  /* stats */
-  .t-stats {
-    display: grid; grid-template-columns: repeat(3,1fr);
-    gap: 10px; margin-bottom: 14px;
-  }
-  .t-stat {
-    background: var(--gray-100); border-radius: 10px;
-    padding: 12px; text-align: center;
-  }
+  .t-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 14px; }
+  .t-stat { background: var(--gray-100); border-radius: 10px; padding: 12px; text-align: center; }
   .t-stat .sv { font-size: 22px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
   .t-stat .sl { font-size: 11px; color: var(--gray-400); font-weight: 600; }
   .sv.purple { color: var(--primary); }
   .sv.blue   { color: var(--info); }
   .sv.green  { color: var(--success); }
 
-  /* progress */
-  .t-prog-hdr {
-    display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;
-  }
+  .t-prog-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
   .t-prog-hdr .pl { font-size: 12px; font-weight: 500; color: var(--gray-400); }
   .t-prog-hdr .pr { font-size: 12px; font-weight: 700; color: var(--gray-600); }
 
-  .prog-track {
-    width: 100%; height: 7px;
-    background: var(--gray-200); border-radius: 99px; overflow: hidden;
-  }
+  .prog-track { width: 100%; height: 7px; background: var(--gray-200); border-radius: 99px; overflow: hidden; }
   .prog-fill {
     height: 100%;
     background: linear-gradient(90deg, var(--primary), var(--accent-light));
@@ -131,7 +101,6 @@
     transition: width 1.2s cubic-bezier(.4,0,.2,1);
   }
 
-  /* status badge */
   .t-status {
     display: inline-flex; align-items: center; gap: 4px;
     font-size: 11px; font-weight: 600; padding: 3px 9px;
@@ -142,7 +111,6 @@
   .s-progress { background: var(--gray-100); color: var(--primary); }
   .s-start    { background: #f3f4f6; color: #6b7280; }
 
-  /* ══ DELETE MODAL ══ */
   .modal-wrap {
     display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,.4); backdrop-filter: blur(4px);
@@ -161,15 +129,14 @@
   .modal-btns { display: flex; gap: 10px; }
   .btn-cancel, .btn-del {
     flex: 1; padding: 11px; border-radius: 10px;
-    font-size: 14px; font-weight: 600; cursor: pointer;
-    border: none; font-family: var(--font); transition: all .2s;
+    font-size: 14px; font-weight: 600; cursor: pointer; border: none;
+    transition: all .2s;
   }
   .btn-cancel { background: var(--gray-100); color: var(--gray-700); }
   .btn-cancel:hover { background: var(--gray-200); }
   .btn-del { background: #ef4444; color: #fff; }
   .btn-del:hover { background: #dc2626; }
 
-  /* ══ TOAST ══ */
   .toast {
     position: fixed; bottom: 22px; right: 22px;
     padding: 11px 16px; border-radius: 11px;
@@ -226,19 +193,15 @@
 
 @else
   <div class="section-title">Target Aktif</div>
-
   <div class="targets-list">
     @foreach($targets as $target)
       @php
         $progress = $target->getProgressPercent();
         $sisa     = max(0, $target->target_value - $target->current_value);
-
         if ($progress >= 100)    { $sc = 's-done';     $st = '✅ Selesai!'; }
         elseif ($progress >= 50) { $sc = 's-almost';   $st = '🔥 Hampir Selesai'; }
         elseif ($progress > 0)   { $sc = 's-progress'; $st = '⚡ Sedang Berjalan'; }
         else                      { $sc = 's-start';    $st = '⏳ Belum Dimulai'; }
-
-        // Format tanggal sebagai range minggu
         $deadlineLabel = '';
         if ($target->deadline) {
           $end   = $target->deadline;
@@ -246,7 +209,6 @@
           $deadlineLabel = $start->translatedFormat('j M') . ' - ' . $end->translatedFormat('j M Y');
         }
       @endphp
-
       <div class="t-card">
         <div class="t-top">
           <div class="t-left">
@@ -269,7 +231,6 @@
               @endif
             </div>
           </div>
-
           <div class="t-actions">
             <a href="{{ route('target.edit', $target->id) }}" class="btn-act edit" title="Edit">
               <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -287,22 +248,11 @@
             </button>
           </div>
         </div>
-
         <div class="t-stats">
-          <div class="t-stat">
-            <div class="sv purple">{{ $target->target_value }}</div>
-            <div class="sl">Target</div>
-          </div>
-          <div class="t-stat">
-            <div class="sv blue">{{ $target->current_value }}</div>
-            <div class="sl">Selesai</div>
-          </div>
-          <div class="t-stat">
-            <div class="sv green">{{ $sisa }}</div>
-            <div class="sl">Tersisa</div>
-          </div>
+          <div class="t-stat"><div class="sv purple">{{ $target->target_value }}</div><div class="sl">Target</div></div>
+          <div class="t-stat"><div class="sv blue">{{ $target->current_value }}</div><div class="sl">Selesai</div></div>
+          <div class="t-stat"><div class="sv green">{{ $sisa }}</div><div class="sl">Tersisa</div></div>
         </div>
-
         <div class="t-prog-hdr">
           <span class="pl">Progress</span>
           <span class="pr">{{ $progress }}%</span>
@@ -310,14 +260,12 @@
         <div class="prog-track">
           <div class="prog-fill" data-pct="{{ $progress }}"></div>
         </div>
-
         <span class="t-status {{ $sc }}">{{ $st }}</span>
       </div>
     @endforeach
   </div>
 @endif
 
-{{-- Modal Hapus --}}
 <div class="modal-wrap" id="deleteModal">
   <div class="modal-box">
     <span class="modal-emoji">🗑️</span>
@@ -334,7 +282,6 @@
 </div>
 
 <div class="toast" id="toast"></div>
-
 @endsection
 
 @push('scripts')
@@ -344,7 +291,6 @@
       setTimeout(() => { b.style.width = b.dataset.pct + '%'; }, 300);
     });
   });
-
   function confirmDelete(id, name) {
     document.getElementById('modalText').textContent = `Kamu yakin ingin menghapus target "${name}"?`;
     document.getElementById('deleteForm').action = `/target/${id}`;
@@ -354,10 +300,8 @@
   document.getElementById('deleteModal')?.addEventListener('click', e => {
     if (e.target === e.currentTarget) closeModal();
   });
-
   const flash = document.getElementById('flashMsg');
   if (flash) showToast(flash.dataset.msg, flash.dataset.type);
-
   function showToast(msg, type = 'success') {
     const t = document.getElementById('toast');
     t.textContent = (type === 'success' ? '✅ ' : '❌ ') + msg;

@@ -8,19 +8,16 @@
   .page-hdr h1 { font-size: 28px; font-weight: 800; color: var(--gray-800); }
   .page-hdr p  { color: var(--gray-400); font-size: 14px; margin-top: 4px; }
 
-  /* back btn */
   .btn-back {
     display: inline-flex; align-items: center; gap: 7px;
     background: var(--gray-100); color: var(--primary);
     border: 1.5px solid var(--gray-200); border-radius: 10px;
     padding: 9px 18px; font-size: 13px; font-weight: 600;
     text-decoration: none; transition: all .2s; margin-bottom: 24px;
-    font-family: var(--font);
   }
   .btn-back:hover { background: var(--gray-200); color: var(--primary); }
   .btn-back svg { width: 16px; height: 16px; }
 
-  /* form card */
   .form-card {
     background: #fff; border-radius: 16px;
     border: 1.5px solid var(--gray-200);
@@ -28,21 +25,14 @@
     box-shadow: var(--shadow);
   }
 
-  /* field */
   .field { margin-bottom: 24px; }
-
-  .field-lbl {
-    display: block; font-size: 14px; font-weight: 700;
-    color: var(--gray-800); margin-bottom: 8px;
-  }
-
+  .field-lbl { display: block; font-size: 14px; font-weight: 700; color: var(--gray-800); margin-bottom: 8px; }
   .field-hint { font-size: 12px; color: var(--gray-400); margin-top: 5px; display: block; }
 
-  /* inputs */
   .f-input, .f-select, .f-textarea {
     width: 100%; padding: 12px 15px;
     border: 1.5px solid var(--gray-200); border-radius: 10px;
-    font-size: 14px; font-family: var(--font); color: var(--gray-800);
+    font-size: 14px; color: var(--gray-800);
     background: #fff; outline: none;
     transition: border-color .2s, box-shadow .2s;
   }
@@ -61,28 +51,20 @@
     border-top: 6px solid var(--gray-400);
   }
 
-  /* number input */
   .f-input[type="number"] { -moz-appearance: textfield; }
   .f-input[type="number"]::-webkit-inner-spin-button,
   .f-input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 
-  /* error */
   .err-msg { font-size: 12px; font-weight: 600; color: #dc2626; margin-top: 5px; display: none; }
 
-  /* save btn */
   .btn-save {
     width: 100%; padding: 14px; border-radius: 10px; border: none;
-    font-size: 15px; font-weight: 700; cursor: pointer;
-    font-family: var(--font); transition: all .2s; margin-top: 6px;
+    font-size: 15px; font-weight: 700; cursor: pointer; transition: all .2s; margin-top: 6px;
   }
   .btn-save:disabled { background: var(--gray-200); color: var(--gray-400); cursor: not-allowed; }
-  .btn-save:not(:disabled) {
-    background: var(--primary);
-    color: #fff; box-shadow: 0 4px 16px rgba(55,36,102,.25);
-  }
+  .btn-save:not(:disabled) { background: var(--primary); color: #fff; box-shadow: 0 4px 16px rgba(55,36,102,.25); }
   .btn-save:not(:disabled):hover { background: var(--primary-light); transform: translateY(-1px); }
 
-  /* toast */
   .toast {
     position: fixed; bottom: 22px; right: 22px;
     padding: 11px 16px; border-radius: 11px;
@@ -123,7 +105,6 @@
     @csrf
     @if(isset($target)) @method('PUT') @endif
 
-    {{-- 1. Apa yang ingin dicapai --}}
     <div class="field">
       <label class="field-lbl" for="name">Apa yang ingin kamu capai?</label>
       <div class="sel-wrap">
@@ -145,7 +126,6 @@
       <span class="err-msg" id="nameErr">Wajib pilih jenis target</span>
     </div>
 
-    {{-- 2. Berapa Banyak --}}
     <div class="field">
       <label class="field-lbl" for="target_value">Berapa Banyak?</label>
       <input type="number" class="f-input" id="target_value" name="target_value"
@@ -159,7 +139,6 @@
       <span class="err-msg" id="valErr">Wajib masukkan jumlah (minimal 1)</span>
     </div>
 
-    {{-- 3. Durasi Target (dropdown minggu) --}}
     <div class="field">
       <label class="field-lbl" for="deadline">Durasi Target</label>
       <div class="sel-wrap">
@@ -168,7 +147,6 @@
             use Carbon\Carbon;
             $weeks = [];
             $now   = Carbon::now();
-            // Hasilkan 4 minggu: minggu ini + 3 minggu ke depan
             for ($i = 0; $i < 4; $i++) {
               $start = $now->copy()->addWeeks($i)->startOfWeek(Carbon::MONDAY);
               $end   = $start->copy()->endOfWeek(Carbon::SUNDAY);
@@ -178,7 +156,6 @@
             }
             $currentDeadline = old('deadline', isset($target) ? $target->deadline?->format('Y-m-d') : '');
           @endphp
-
           @foreach($weeks as $week)
             <option value="{{ $week['value'] }}" {{ $currentDeadline === $week['value'] ? 'selected' : '' }}>
               {{ $week['label'] }}
@@ -192,12 +169,10 @@
     <button class="btn-save" type="submit" id="saveBtn" disabled>
       {{ isset($target) ? 'Update Target' : 'Simpan Target' }}
     </button>
-
   </form>
 </div>
 
 <div class="toast" id="toast"></div>
-
 @endsection
 
 @push('scripts')
