@@ -12,10 +12,11 @@ class Target extends Model
 
     protected $fillable = [
         'user_id', 'name', 'description', 'type',
-        'target_value', 'current_value', 'deadline', 'status',
+        'target_value', 'current_value', 'start_date', 'deadline', 'status',
     ];
 
     protected $casts = [
+        'start_date' => 'date',
         'deadline' => 'date',
     ];
 

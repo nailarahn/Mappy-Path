@@ -3,6 +3,7 @@
 @section('title', isset($target) ? 'Edit Target' : 'Tambah Target')
 
 @push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
   .page-hdr { margin-bottom: 24px; }
   .page-hdr h1 { font-size: 28px; font-weight: 800; color: var(--gray-800); }
@@ -43,12 +44,14 @@
   .f-textarea { resize: vertical; min-height: 88px; }
 
   .sel-wrap { position: relative; }
-  .sel-wrap::after {
-    content: ''; position: absolute; right: 15px; top: 50%;
+  .sel-wrap.has-calendar::after {
+    content: '';
+    position: absolute; right: 14px; top: 50%;
     transform: translateY(-50%); pointer-events: none;
-    width: 0; height: 0;
-    border-left: 5px solid transparent; border-right: 5px solid transparent;
-    border-top: 6px solid var(--gray-400);
+    width: 18px; height: 18px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af' stroke-width='2'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
   }
 
   .f-input[type="number"] { -moz-appearance: textfield; }
@@ -64,6 +67,51 @@
   .btn-save:disabled { background: var(--gray-200); color: var(--gray-400); cursor: not-allowed; }
   .btn-save:not(:disabled) { background: var(--primary); color: #fff; box-shadow: 0 4px 16px rgba(55,36,102,.25); }
   .btn-save:not(:disabled):hover { background: var(--primary-light); transform: translateY(-1px); }
+
+  /* Flatpickr custom styling */
+  .flatpickr-calendar {
+    border-radius: 12px !important;
+    box-shadow: 0 8px 32px rgba(55,36,102,.15) !important;
+    border: 1.5px solid var(--gray-200) !important;
+    font-family: inherit !important;
+  }
+  .flatpickr-day.selected,
+  .flatpickr-day.selected:hover {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+  }
+  .flatpickr-day:hover {
+    background: rgba(55,36,102,.08) !important;
+  }
+  .flatpickr-months .flatpickr-month,
+  .flatpickr-weekdays,
+  span.flatpickr-weekday {
+    background: var(--primary) !important;
+    color: #fff !important;
+    border-radius: 10px 10px 0 0;
+  }
+  .flatpickr-current-month .flatpickr-monthDropdown-months,
+  .flatpickr-current-month input.cur-year {
+    color: #fff !important;
+  }
+  .flatpickr-prev-month svg,
+  .flatpickr-next-month svg {
+    fill: #fff !important;
+  }
+
+  /* FIX 1: Cursor pointer untuk kedua input tanggal (bukan hanya #deadline) */
+  #start_date,
+  #deadline {
+    cursor: pointer;
+    background: #fff;
+  }
+
+  /* Input readonly non-tanggal tetap not-allowed */
+  .f-input[readonly]:not(#start_date):not(#deadline) {
+    background: var(--gray-100);
+    color: var(--gray-600);
+    cursor: not-allowed;
+  }
 
   .toast {
     position: fixed; bottom: 22px; right: 22px;
@@ -105,27 +153,16 @@
     @csrf
     @if(isset($target)) @method('PUT') @endif
 
+    {{-- Field 1: nama target — hidden, auto-filled --}}
     <div class="field">
-      <label class="field-lbl" for="name">Apa yang ingin kamu capai?</label>
-      <div class="sel-wrap">
-        <select class="f-select" id="name" name="name" required>
-          <option value="" disabled {{ old('name', $target->name ?? '') === '' ? 'selected' : '' }}>
-            Pilih jenis target…
-          </option>
-          @foreach(['Menyelesaikan Materi','Mengerjakan Latihan','Membaca Buku','Menonton Video','Mengikuti Kuis'] as $opt)
-            <option value="{{ $opt }}" {{ old('name', $target->name ?? '') === $opt ? 'selected' : '' }}>
-              {{ $opt }}
-            </option>
-          @endforeach
-        </select>
-      </div>
-      <span class="field-hint">Pilih jenis target yang ingin kamu capai</span>
-      @error('name')
-        <span class="err-msg" style="display:block">{{ $message }}</span>
-      @enderror
-      <span class="err-msg" id="nameErr">Wajib pilih jenis target</span>
+      <label class="field-lbl" for="name_display">Apa yang ingin kamu capai?</label>
+      <input type="text" class="f-input" id="name_display"
+            value="Menyelesaikan Materi Video" readonly>
+      <input type="hidden" name="name" value="Menyelesaikan Materi Video">
+      <span class="field-hint">Jenis target sudah ditentukan secara otomatis</span>
     </div>
 
+    {{-- Field 2: jumlah --}}
     <div class="field">
       <label class="field-lbl" for="target_value">Berapa Banyak?</label>
       <input type="number" class="f-input" id="target_value" name="target_value"
@@ -139,31 +176,31 @@
       <span class="err-msg" id="valErr">Wajib masukkan jumlah (minimal 1)</span>
     </div>
 
+    {{-- Field 3: durasi target — tanggal mulai & selesai --}}
     <div class="field">
-      <label class="field-lbl" for="deadline">Durasi Target</label>
-      <div class="sel-wrap">
-        <select class="f-select" id="deadline" name="deadline">
-          @php
-            use Carbon\Carbon;
-            $weeks = [];
-            $now   = Carbon::now();
-            for ($i = 0; $i < 4; $i++) {
-              $start = $now->copy()->addWeeks($i)->startOfWeek(Carbon::MONDAY);
-              $end   = $start->copy()->endOfWeek(Carbon::SUNDAY);
-              $label = ($i === 0 ? 'Minggu Ini' : 'Minggu ke-' . ($i+1))
-                       . ' (' . $start->translatedFormat('j M') . ' - ' . $end->translatedFormat('j M Y') . ')';
-              $weeks[] = ['value' => $end->format('Y-m-d'), 'label' => $label];
-            }
-            $currentDeadline = old('deadline', isset($target) ? $target->deadline?->format('Y-m-d') : '');
-          @endphp
-          @foreach($weeks as $week)
-            <option value="{{ $week['value'] }}" {{ $currentDeadline === $week['value'] ? 'selected' : '' }}>
-              {{ $week['label'] }}
-            </option>
-          @endforeach
-        </select>
+      <label class="field-lbl">Durasi Target</label>
+      <div style="display: flex; gap: 12px;">
+        <div style="flex: 1;">
+          <div class="sel-wrap has-calendar">
+            <input type="text" class="f-input" id="start_date" name="start_date"
+                  placeholder="Tanggal mulai..."
+                  value="{{ old('start_date', isset($target) ? $target->start_date?->format('Y-m-d') : '') }}"
+                  autocomplete="off" readonly required>
+          </div>
+          <span class="field-hint">Tanggal mulai</span>
+          <span class="err-msg" id="startErr">Wajib pilih tanggal mulai</span>
+        </div>
+        <div style="flex: 1;">
+          <div class="sel-wrap has-calendar">
+            <input type="text" class="f-input" id="deadline" name="deadline"
+                  placeholder="Tanggal selesai..."
+                  value="{{ old('deadline', isset($target) ? $target->deadline?->format('Y-m-d') : '') }}"
+                  autocomplete="off" readonly required>
+          </div>
+          <span class="field-hint">Tanggal selesai</span>
+          <span class="err-msg" id="deadlineErr">Wajib pilih tanggal selesai</span>
+        </div>
       </div>
-      <span class="field-hint">Target akan berlaku untuk minggu berjalan</span>
     </div>
 
     <button class="btn-save" type="submit" id="saveBtn" disabled>
@@ -176,28 +213,77 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js"></script>
 <script>
-  const nameEl  = document.getElementById('name');
-  const valEl   = document.getElementById('target_value');
-  const saveBtn = document.getElementById('saveBtn');
-  const nameErr = document.getElementById('nameErr');
-  const valErr  = document.getElementById('valErr');
+  const valEl       = document.getElementById('target_value');
+  const startEl     = document.getElementById('start_date');
+  const deadlineEl  = document.getElementById('deadline');
+  const saveBtn     = document.getElementById('saveBtn');
+  const valErr      = document.getElementById('valErr');
+  const startErr    = document.getElementById('startErr');
+  const deadlineErr = document.getElementById('deadlineErr');
+
+  // FIX 2: Tambah onClose di startPicker agar check() terpanggil saat kalender ditutup
+  const startPicker = flatpickr("#start_date", {
+    locale: "id",
+    dateFormat: "Y-m-d",
+    minDate: "today",
+    disableMobile: false,
+    onChange: function(selectedDates, dateStr) {
+      startErr.style.display = 'none';
+      startEl.style.borderColor = '';
+      // Update minDate deadline agar tidak bisa lebih awal dari tanggal mulai
+      if (deadlinePicker) deadlinePicker.set('minDate', dateStr);
+      check();
+    },
+    onClose: function(selectedDates) {
+      if (!selectedDates.length) {
+        startErr.style.display = 'block';
+        startEl.style.borderColor = '#dc2626';
+      }
+      check();
+    }
+  });
+
+  const deadlinePicker = flatpickr("#deadline", {
+    locale: "id",
+    dateFormat: "Y-m-d",
+    minDate: "today",
+    disableMobile: false,
+    onChange: function(selectedDates, dateStr) {
+      deadlineErr.style.display = 'none';
+      deadlineEl.style.borderColor = '';
+      check();
+    },
+    onClose: function(selectedDates) {
+      if (!selectedDates.length) {
+        deadlineErr.style.display = 'block';
+        deadlineEl.style.borderColor = '#dc2626';
+      }
+      check();
+    }
+  });
 
   function check() {
-    const ok = nameEl.value !== '' && valEl.value !== '' && parseInt(valEl.value) >= 1;
+    const v  = parseInt(valEl.value);
+    const ok = valEl.value !== '' && v >= 1 && startEl.value !== '' && deadlineEl.value !== '';
     saveBtn.disabled = !ok;
   }
 
-  nameEl.addEventListener('change', () => { nameErr.style.display = 'none'; check(); });
-  nameEl.addEventListener('blur',   () => { if (!nameEl.value) nameErr.style.display = 'block'; check(); });
-
   valEl.addEventListener('input', () => {
     const v = parseInt(valEl.value);
-    if (!valEl.value || v < 1) { valEl.style.borderColor = '#dc2626'; valErr.style.display = 'block'; }
-    else                       { valEl.style.borderColor = ''; valErr.style.display = 'none'; }
+    if (!valEl.value || v < 1) {
+      valEl.style.borderColor = '#dc2626';
+      valErr.style.display = 'block';
+    } else {
+      valEl.style.borderColor = '';
+      valErr.style.display = 'none';
+    }
     check();
   });
 
+  // Jalankan check awal (untuk mode edit yang sudah ada value)
   check();
 
   @if($errors->any())
