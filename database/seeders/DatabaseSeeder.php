@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
             'level'           => 'beginner',
             'category'        => 'networking',
             'total_stages'    => 4,
-            'estimated_hours' => 16,
+            'estimated_hours' => 2,
             'order'           => 1,
         ]);
 
@@ -57,7 +57,7 @@ class DatabaseSeeder extends Seeder
                 'Pengertian dan Jenis Jaringan Komputer',
                 'Memahami apa itu jaringan komputer, manfaatnya, dan mengenal LAN, MAN, dan WAN beserta perbedaannya.',
                 'https://youtu.be/WPhjxoVDygk?si=_BTGBhRiU0nsRp4J',
-                10,
+                7,
                 "Definisi jaringan komputer\nManfaat jaringan\nKomponen dasar jaringan\nContoh jaringan sehari-hari\nLAN (Local Area Network)\nMAN (Metropolitan Area Network)\nWAN (Wide Area Network)\nPerbandingan jangkauan dan penggunaan",
             ],
             [
@@ -65,7 +65,7 @@ class DatabaseSeeder extends Seeder
                 'Topologi Jaringan',
                 'Mengenal berbagai topologi jaringan dan penerapannya.',
                 'https://youtu.be/lRNcZEgWrw4?si=N2Ww75bt7n4MjqsT',
-                15,
+                7,
                 "Topologi Bus\nTopologi Star\nTopologi Ring\nTopologi Mesh\nKelebihan dan kekurangan tiap topologi",
             ],
             [
@@ -73,7 +73,7 @@ class DatabaseSeeder extends Seeder
                 'Pengenalan Perangkat Jaringan',
                 'Mengenal router, switch, hub, access point, dan modem.',
                 'https://youtu.be/N2CNS1N9gZo?si=cltK03mgv5hHY_ue',
-                15,
+                8,
                 "Router dan fungsinya\nSwitch vs Hub\nAccess Point\nModem\nPerbedaan fungsi antar perangkat",
             ],
             [
@@ -81,7 +81,7 @@ class DatabaseSeeder extends Seeder
                 'Fungsi dan Cara Kerja Perangkat Jaringan',
                 'Memahami cara kerja masing-masing perangkat jaringan.',
                 'https://youtu.be/jokDcCuMABY?si=tPDrIDtOddhZ2LlO',
-                20,
+                5,
                 "Cara kerja router\nCara kerja switch\nCara kerja access point\nSkenario jaringan sederhana",
             ],
 
@@ -115,7 +115,7 @@ class DatabaseSeeder extends Seeder
             'level'           => 'intermediate',
             'category'        => 'networking',
             'total_stages'    => 9,
-            'estimated_hours' => 45,
+            'estimated_hours' => 4,
             'order'           => 2,
         ]);
 
@@ -125,7 +125,7 @@ class DatabaseSeeder extends Seeder
                 'IPv4 & IPv6',
                 'Memahami dasar sistem pengalamatan IP.',
                 'https://youtu.be/lP-gtvo_cuc?si=dojRSjM-lYM2iuCB',
-                20,
+                11,
                 "IPv4\nIPv6\nPerbedaan IP\nFungsi IP address",
             ],
             [
@@ -133,7 +133,7 @@ class DatabaseSeeder extends Seeder
                 'TCP/IP Model',
                 'Memahami model TCP/IP sebagai dasar komunikasi internet.',
                 'https://youtu.be/0RedyOvvkM0?si=2tHHAm8wZhWyQ7hA',
-                20,
+                27,
                 "4 lapisan TCP/IP\nPerbandingan OSI vs TCP/IP\nBagaimana internet bekerja\nProtokol tiap lapisan",
             ],
             [
@@ -141,7 +141,7 @@ class DatabaseSeeder extends Seeder
                 'Networking Service',
                 'Memahami layanan jaringan dasar.',
                 'https://youtu.be/5a71GbrNC8U?si=T6UdHnqTPb-_Aeys',
-                20,
+                3,
                 "DNS\nDHCP\nHTTP\nFTP",
             ],
             [
@@ -149,7 +149,7 @@ class DatabaseSeeder extends Seeder
                 'Keamanan Jaringan Telekomunikasi',
                 'Dasar keamanan jaringan telekomunikasi.',
                 'https://youtu.be/rr24pcYNb-E?si=5NwUDhtVaoxROleZ',
-                20,
+                11,
                 "Firewall\nEnkripsi\nAncaman jaringan\nProteksi data",
             ],
             [
@@ -157,7 +157,7 @@ class DatabaseSeeder extends Seeder
                 'Sistem Seluler',
                 'Mengenal jaringan seluler modern.',
                 'https://youtu.be/FISGFwPR5mo?si=siHi7FXy0Vl13Dce',
-                20,
+                3,
                 "2G 3G 4G 5G\nBase station\nSIM card\nMobile network",
             ],
             [
@@ -165,7 +165,7 @@ class DatabaseSeeder extends Seeder
                 'Microwave System',
                 'Teknologi komunikasi microwave.',
                 'https://youtu.be/d7uVG7YSRiE?si=VQAmMEc6GW9hQzk1',
-                20,
+                3,
                 "Gelombang mikro\nLine of sight\nTransmisi data\nAntena microwave",
             ],
             [
@@ -173,7 +173,7 @@ class DatabaseSeeder extends Seeder
                 'VSAT IP',
                 'Sistem komunikasi satelit VSAT.',
                 'https://youtu.be/f6SEQhe1cNs?si=LVAapbopenn8dXTO',
-                20,
+                3,
                 "VSAT\nSatelit komunikasi\nRemote area network\nInternet satelit",
             ],
             [
@@ -181,7 +181,7 @@ class DatabaseSeeder extends Seeder
                 'Fiber Optic',
                 'Komunikasi menggunakan serat optik.',
                 'https://youtu.be/wBfRcaliKjE?si=EomKGaBamvpiAR3A',
-                20,
+                4,
                 "Serat optik\nKecepatan cahaya\nTransmisi data\nBandwidth tinggi",
             ],
             [
@@ -189,7 +189,7 @@ class DatabaseSeeder extends Seeder
                 'WLAN',
                 'Teknologi jaringan nirkabel.',
                 'https://youtu.be/85k0sn7ZYoE?si=dLnVgsE9RdE26qsa',
-                20,
+                4,
                 "WiFi\nAccess point\nWireless network\nKeamanan WLAN",
             ],
         ];
@@ -222,8 +222,8 @@ class DatabaseSeeder extends Seeder
             'level'           => 'advanced',
             'category'        => 'networking',
             'total_stages'    => 6,
-            'estimated_hours' => 20,
-            'order'           => 4,
+            'estimated_hours' => 3,
+            'order'           => 3,
         ]);
 
         $s3data = [
@@ -232,7 +232,7 @@ class DatabaseSeeder extends Seeder
                 'Proses Bisnis di Bidang Jaringan',
                 'Memahami alur kerja dan peran teknisi jaringan di industri.',
                 'https://youtu.be/zq4rOPsIcZU?si=s2ijkaVy3AMUUQv-',
-                20,
+                11,
                 "Peran teknisi jaringan\nAlur kerja di industri\nDokumentasi jaringan\nKomunikasi dengan klien",
             ],
             [
@@ -240,7 +240,7 @@ class DatabaseSeeder extends Seeder
                 'Maintenance Jaringan',
                 'Proses pemeliharaan jaringan secara berkala.',
                 'https://youtu.be/G-bIiAA_dNo?si=T7caT-vHVnx75puV',
-                20,
+                16,
                 "Pengecekan jaringan\nUpdate perangkat\nMonitoring sistem\nJadwal maintenance",
             ],
             [
@@ -248,7 +248,7 @@ class DatabaseSeeder extends Seeder
                 'Troubleshooting Dasar',
                 'Metode dasar mengatasi masalah jaringan.',
                 'https://youtu.be/ZQ2YB5ihyFM?si=whzz7C09qFtpN5R8',
-                25,
+                23,
                 "Identifikasi masalah\nTools jaringan\nAnalisis gangguan\nSolusi error",
             ],
             [
@@ -256,7 +256,7 @@ class DatabaseSeeder extends Seeder
                 'Cloud Computing',
                 'Konsep layanan komputasi berbasis cloud.',
                 'https://youtu.be/iw3pCL8UiX8?si=gDiPzprgfnYNu7nZ',
-                20,
+                10,
                 "Pengertian cloud computing\nModel layanan: IaaS\nPaaS\nSaaS\nCloud deployment",
             ],
             [
@@ -264,7 +264,7 @@ class DatabaseSeeder extends Seeder
                 'Internet of Things (IoT)',
                 'Konsep IoT dan penerapannya dalam kehidupan nyata.',
                 'https://youtu.be/n-f8B76Hozk?si=26L6ph1xP0dgkb4H',
-                20,
+                2,
                 "Pengertian IoT\nKomponen sistem IoT\nProtokol IoT (MQTT)\nContoh implementasi IoT",
             ],
             [
@@ -272,7 +272,7 @@ class DatabaseSeeder extends Seeder
                 'Virtualisasi Jaringan',
                 'Teknologi membuat sistem virtual dalam satu perangkat fisik.',
                 'https://youtu.be/fckgHc2JwQs?si=D-mIlactMpdc3apu',
-                20,
+                9,
                 "Virtual machine\nHypervisor\nCloud infrastructure\nEfisiensi server",
             ],
         ];
