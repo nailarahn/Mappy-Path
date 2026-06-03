@@ -3,6 +3,7 @@
 @section('title', 'Dashboard')
 
 @push('styles')
+
 <style>
 .page-header { margin-bottom: 1.75rem; }
 .page-greeting { font-size: 1.75rem; font-weight: 800; color: var(--primary); }
@@ -41,6 +42,8 @@
     padding: 1rem 1.5rem;
     border-bottom: 1px solid var(--gray-200);
     cursor: pointer;
+    text-decoration:none;
+    color:inherit;
     transition: background 0.2s;
 }
 .rec-item:last-child { border-bottom: none; }
@@ -61,11 +64,46 @@
 .rec-arrow { color: var(--gray-300); font-size: 1rem; }
 .rec-arrow:hover { color: var(--primary); }
 
-.progress-chart {
-    width: 100%;
-    overflow-x: auto;
-}
 canvas { max-width: 100%; }
+.stat-card-link{
+    text-decoration:none;
+    color:inherit;
+    display:block;
+}
+
+.stat-card-link .stat-card{
+    transition:all .3s ease;
+    cursor:pointer;
+}
+
+.stat-card-link:hover .stat-card{
+    transform:translateY(-5px);
+    box-shadow:0 12px 25px rgba(55,36,102,.15);
+}
+/* ===== PROGRESS CARD ===== */
+.progress-card{
+    width:100%;
+    border:none;
+    overflow:hidden;
+    border-radius:20px;
+    background:#fff;
+    box-shadow:
+        0 10px 30px rgba(55,36,102,.08),
+        0 2px 8px rgba(55,36,102,.05);
+}
+
+.progress-card .card-header{
+    background:linear-gradient(
+        135deg,
+        #372466 0%,
+        #5e46a7 100%
+    );
+    color:white;
+    font-size:1rem;
+    font-weight:700;
+    padding:1rem 1.5rem;
+    border:none;
+}
 </style>
 @endpush
 
@@ -78,54 +116,73 @@ canvas { max-width: 100%; }
 
 <!-- STAT CARDS -->
 <div class="stat-cards">
-    <div class="stat-card">
-        <div class="stat-card-header">
-            <span class="stat-label">Total Progress</span>
-            <div class="stat-icon" style="background:#ede9ff;">📊</div>
-        </div>
-        <div class="stat-value">75%</div>
-        <div class="stat-progress">
-            <div class="progress-bar">
-                <div class="progress-fill" style="width:75%"></div>
+
+    <a href="{{ route('progress') }}" class="stat-card-link">
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <span class="stat-label">Total Progress</span>
+                <div class="stat-icon" style="background:#ede9ff;">📊</div>
+            </div>
+            <div class="stat-value">75%</div>
+            <div class="stat-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width:75%"></div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-card-header">
-            <span class="stat-label">Tahap saat ini</span>
-            <div class="stat-icon" style="background:#fff7ed;">📖</div>
-        </div>
-        <div class="stat-value" style="font-size:1.1rem;font-weight:700;margin-top:.25rem;">Jaringan Dasar TKJ</div>
-        <div class="stat-progress">
-            <div class="progress-bar">
-                <div class="progress-fill" style="width:65%"></div>
+    </a>
+
+    <a href="{{ route('roadmap') }}" class="stat-card-link">
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <span class="stat-label">Tahap saat ini</span>
+                <div class="stat-icon" style="background:#fff7ed;">📖</div>
+            </div>
+            <div class="stat-value" style="font-size:1.1rem;font-weight:700;margin-top:.25rem;">
+                Jaringan Dasar TKJ
+            </div>
+            <div class="stat-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width:65%"></div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-card-header">
-            <span class="stat-label">Materi Selesai</span>
-            <div class="stat-icon" style="background:#ecfdf5;">📚</div>
-        </div>
-        <div class="stat-value">10<span style="font-size:1rem;color:var(--gray-400);font-weight:500;">/54</span></div>
-        <div class="stat-progress">
-            <div class="progress-bar">
-                <div class="progress-fill" style="width:18.5%"></div>
+    </a>
+
+    <a href="{{ route('roadmap') }}" class="stat-card-link">
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <span class="stat-label">Materi Selesai</span>
+                <div class="stat-icon" style="background:#ecfdf5;">📚</div>
+            </div>
+            <div class="stat-value">
+                10<span style="font-size:1rem;color:var(--gray-400);font-weight:500;">/54</span>
+            </div>
+            <div class="stat-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width:18.5%"></div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-card-header">
-            <span class="stat-label">Target Minggu</span>
-            <div class="stat-icon" style="background:#f0fdf4;">🎯</div>
-        </div>
-        <div class="stat-value">4<span style="font-size:1rem;color:var(--gray-400);font-weight:500;">/5</span></div>
-        <div class="stat-progress">
-            <div class="progress-bar">
-                <div class="progress-fill" style="width:80%"></div>
+    </a>
+
+    <a href="{{ route('target') }}" class="stat-card-link">
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <span class="stat-label">Target Minggu</span>
+                <div class="stat-icon" style="background:#f0fdf4;">🎯</div>
+            </div>
+            <div class="stat-value">
+                4<span style="font-size:1rem;color:var(--gray-400);font-weight:500;">/5</span>
+            </div>
+            <div class="stat-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width:80%"></div>
+                </div>
             </div>
         </div>
-    </div>
+    </a>
+
 </div>
 
 <!-- LANJUTKAN & REKOMENDASI -->
@@ -151,27 +208,42 @@ canvas { max-width: 100%; }
     </div>
 
     <!-- Rekomendasi -->
-    <div class="card">
-        <div class="card-header">Rekomendasi Materi Untukmu</div>
-        @foreach($recommendations as $rec)
-        <div class="rec-item">
-            <div class="rec-icon" style="background:{{ $rec['color'] }}22;">{{ $rec['icon'] }}</div>
+<div class="card">
+    <div class="card-header">Rekomendasi Materi Untukmu</div>
+
+    @foreach($recommendations as $rec)
+        <a href="{{ route('roadmap') }}" class="rec-item">
+            <div class="rec-icon" style="background:{{ $rec['color'] }}22;">
+                {{ $rec['icon'] }}
+            </div>
+
             <div class="rec-info">
                 <div class="rec-title">{{ $rec['title'] }}</div>
-                <div class="rec-meta">{{ $rec['type'] }} · {{ $rec['duration'] }}</div>
+                <div class="rec-meta">
+                    {{ $rec['type'] }} · {{ $rec['duration'] }}
+                </div>
             </div>
+
             <span class="rec-arrow">›</span>
-        </div>
-        @endforeach
-    </div>
+        </a>
+    @endforeach
 </div>
 
+</div> {{-- tutup grid-2 --}}
+
 <!-- GRAFIK PROGRESS -->
-<div class="card">
-    <div class="card-header">Ringkasan Progress</div>
+<div class="card progress-card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span>📈 Ringkasan Progress Belajar</span>
+
+        <span class="badge-progress">
+            {{ end($progressData)['progress'] ?? 75 }}%
+        </span>
+    </div>
+
     <div class="card-body">
         <div class="progress-chart">
-            <canvas id="progressChart" height="80"></canvas>
+            <canvas id="progressChart" height="90"></canvas>
         </div>
     </div>
 </div>

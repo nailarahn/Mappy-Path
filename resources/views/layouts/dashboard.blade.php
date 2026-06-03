@@ -154,6 +154,7 @@
             top: 0;
             z-index: 50;
             box-shadow: 0 2px 10px rgba(55,36,102,0.04);
+            overflow: visible;
         }
         .topbar-left {
             display: flex;
@@ -170,55 +171,9 @@
             color: var(--primary);
         }
         .menu-toggle:hover { background: var(--gray-100); }
-        .search-bar {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: var(--gray-100);
-            border: 1.5px solid var(--gray-200);
-            border-radius: 10px;
-            padding: 0.5rem 1rem;
-            width: 320px;
-            transition: border-color 0.2s;
-        }
-        .search-bar:focus-within { border-color: var(--accent); }
-        .search-bar input {
-            background: none;
-            border: none;
-            outline: none;
-            font-family: var(--font);
-            font-size: 0.875rem;
-            color: var(--gray-700);
-            width: 100%;
-        }
-        .search-bar input::placeholder { color: var(--gray-300); }
-        .search-bar svg { width: 18px; height: 18px; color: var(--gray-400); flex-shrink: 0; }
-
+        
         .topbar-right { display: flex; align-items: center; gap: 1rem; }
-        .notif-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: var(--gray-100);
-            border: 1.5px solid var(--gray-200);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: var(--gray-500);
-            position: relative;
-        }
-        .notif-btn:hover { background: var(--gray-200); color: var(--primary); }
-        .notif-badge {
-            width: 8px;
-            height: 8px;
-            background: var(--danger);
-            border-radius: 50%;
-            position: absolute;
-            top: 6px;
-            right: 6px;
-        }
+    
         .user-info {
             display: flex;
             align-items: center;
@@ -394,6 +349,59 @@
         @media (max-width: 400px) {
             .stat-cards { grid-template-columns: 1fr; }
         }
+
+        /* ===== PROFILE DROPDOWN ===== */
+        .user-wrap { position: relative; }
+        .profile-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 220px;
+            background: var(--white);
+            border: 1.5px solid var(--gray-200);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(55,36,102,0.13);
+            display: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+    .profile-dropdown.show { display: block; }
+    .profile-drop-header {
+        padding: 1rem 1.1rem;
+        border-bottom: 1px solid var(--gray-100);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .profile-drop-avatar {
+        width: 40px; height: 40px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        display: flex; align-items: center; justify-content: center;
+        color: white; font-weight: 700; font-size: 1rem;
+        flex-shrink: 0;
+    }
+    .profile-drop-name { font-size: 0.82rem; font-weight: 700; color: var(--gray-800); line-height: 1.3; }
+    .profile-drop-role { font-size: 0.68rem; color: var(--warning); font-weight: 500; }
+    .profile-drop-menu { padding: 0.5rem; }
+    .profile-drop-item {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.6rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: var(--gray-600);
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.15s;
+    }
+    .profile-drop-item:hover { background: var(--gray-100); color: var(--primary); }
+    .profile-drop-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .profile-drop-item.danger { color: #dc2626; }
+    .profile-drop-item.danger:hover { background: #fef2f2; color: #dc2626; }
+    .profile-drop-divider { height: 1px; background: var(--gray-100); margin: 0.35rem 0; }
     </style>
     @stack('styles')
 </head>
@@ -462,27 +470,21 @@
 <div class="main-wrapper">
     <!-- Topbar -->
     <header class="topbar">
-        <div class="topbar-left">
-            <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-                </svg>
-            </button>
-            <div class="search-bar">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-                </svg>
-                <input type="text" placeholder="Cari materi, topik, roadmap ...">
-            </div>
-        </div>
-        <div class="topbar-right">
-            <div class="notif-btn">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/>
-                </svg>
-                <span class="notif-badge"></span>
-            </div>
-            <div class="user-info">
+    <div class="topbar-left">
+        <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+        </button>
+    </div>
+
+    <div class="topbar-right">
+
+    {{-- PROFIL --}}
+        <div class="user-wrap">
+            <div class="user-info" id="userBtn" onclick="toggleProfile()">
                 <div class="user-meta">
                     <div class="user-name">{{ Auth::user()->name }}</div>
                     <div class="user-role">⭐ {{ Auth::user()->getRoleLabel() }}</div>
@@ -491,8 +493,39 @@
                     {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                 </div>
             </div>
+            <div class="profile-dropdown" id="profileDropdown">
+                <div class="profile-drop-header">
+                    <div class="profile-drop-avatar">
+                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                    </div>
+                    <div>
+                        <div class="profile-drop-name">{{ Auth::user()->name }}</div>
+                        <div class="profile-drop-role">⭐ {{ Auth::user()->getRoleLabel() }}</div>
+                    </div>
+                </div>
+                <div class="profile-drop-menu">
+                    <a href="{{ route('pengaturan.index') }}" class="profile-drop-item">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+                        </svg>
+                        Pengaturan
+                    </a>
+                    <div class="profile-drop-divider"></div>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="profile-drop-item danger" style="background:none;border:none;width:100%;text-align:left;font-family:var(--font);">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
+                            </svg>
+                            Keluar
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
-    </header>
+
+    </div>
+</header>
 
     <!-- Content -->
     <main class="page-content">
@@ -502,15 +535,44 @@
 
 <script>
 function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
-    sidebar.classList.toggle('open');
-    overlay.classList.toggle('show');
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('show');
 }
 function closeSidebar() {
     document.getElementById('sidebar').classList.remove('open');
     document.getElementById('sidebarOverlay').classList.remove('show');
 }
+
+function toggleProfile() {
+    document.getElementById('profileDropdown').classList.toggle('show');
+    document.getElementById('notifDropdown').classList.remove('show');
+}
+function markRead(el) {
+    el.classList.remove('unread');
+    const dot = el.querySelector('.notif-unread-dot');
+    if (dot) dot.remove();
+    updateBadge();
+}
+function markAllRead() {
+    document.querySelectorAll('.notif-item.unread').forEach(el => {
+        el.classList.remove('unread');
+        const dot = el.querySelector('.notif-unread-dot');
+        if (dot) dot.remove();
+    });
+    updateBadge();
+}
+function updateBadge() {
+    const unread = document.querySelectorAll('.notif-item.unread').length;
+    const badge = document.getElementById('notifBadge');
+    if (unread === 0) badge.style.display = 'none';
+}
+
+document.addEventListener('click', function(e) {
+    if (!document.getElementById('userBtn').contains(e.target) &&
+        !document.getElementById('profileDropdown').contains(e.target)) {
+        document.getElementById('profileDropdown').classList.remove('show');
+    }
+});
 </script>
 @stack('scripts')
 </body>
