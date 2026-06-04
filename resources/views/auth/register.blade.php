@@ -230,7 +230,7 @@ body { background: var(--white); min-height: 100vh; }
                 </div>
                 <div class="benefit-item">
                     <div class="benefit-check">✓</div>
-                    15+materi video & artikel berkualitas
+                    19 Materi video
                 </div>
                 <div class="benefit-item">
                     <div class="benefit-check">✓</div>
@@ -238,11 +238,11 @@ body { background: var(--white); min-height: 100vh; }
                 </div>
                 <div class="benefit-item">
                     <div class="benefit-check">✓</div>
-                    Badge & sertifikat penyelesaian materi
+                    Badge penyelesaian materi
                 </div>
                 <div class="benefit-item">
                     <div class="benefit-check">✓</div>
-                    Pantau progress belajar secara real-time
+                    Pantau progress belajar 
                 </div>
             </div>
         </div>

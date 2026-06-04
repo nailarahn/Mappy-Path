@@ -54,12 +54,12 @@
     position: relative;
 }
 
-.stage-list::before {
+.stage-item:not(:last-child)::after {
     content: '';
     position: absolute;
-    left: 28px;
-    top: 24px;
-    bottom: 24px;
+    left: 23px;          
+    top: 46px;           
+    height: calc(100% + 0px);  
     width: 2px;
     background: var(--gray-200);
     z-index: 0;
@@ -235,10 +235,11 @@
 }
 
 @media (max-width: 640px) {
-    .stage-list::before { left: 22px; }
+    .stage-item:not(:last-child)::after { left: 19px; top: 38px; }
     .stage-num { width: 38px; height: 38px; font-size: 0.8rem; }
     .stage-title { font-size: 0.875rem; }
 }
+
 </style>
 @endpush
 
@@ -362,15 +363,15 @@
         <div style="text-align:center;padding:3rem;color:var(--gray-400);">Belum ada roadmap level menengah.</div>
     @else
         <div class="roadmap-pills" id="pills-menengah">
-            @foreach($menengahRoadmaps as $i => $rm)
-            <button class="roadmap-pill {{ $i === 0 ? 'active' : '' }}"
+            @foreach($menengahRoadmaps as $rm)
+            <button class="roadmap-pill {{ $loop->first ? 'active' : '' }}"
                     onclick="switchRoadmap('menengah', {{ $rm->id }}, this)">
                 {{ $rm->title }}
             </button>
             @endforeach
         </div>
-        @foreach($menengahRoadmaps as $i => $rm)
-        <div class="roadmap-stages {{ $i === 0 ? '' : 'd-none' }}" id="stages-menengah-{{ $rm->id }}">
+        @foreach($menengahRoadmaps as $rm)
+        <div class="roadmap-stages {{ $loop->first ? '' : 'd-none' }}" id="stages-menengah-{{ $rm->id }}">
             @if($rm->is_enrolled)
             <div class="roadmap-progress-bar">
                 <span class="label">Progress kamu</span>
@@ -428,13 +429,13 @@
         <div style="text-align:center;padding:3rem;color:var(--gray-400);">Belum ada roadmap level lanjutan.</div>
     @else
         <div class="roadmap-pills" id="pills-lanjutan">
-            @foreach($lanjutanRoadmaps as $i => $rm)
-            <button class="roadmap-pill {{ $i === 0 ? 'active' : '' }}"
+            @foreach($lanjutanRoadmaps as $rm)
+            <button class="roadmap-pill {{ $loop->first ? 'active' : '' }}"
                     onclick="switchRoadmap('lanjutan', {{ $rm->id }}, this)">{{ $rm->title }}</button>
             @endforeach
         </div>
-        @foreach($lanjutanRoadmaps as $i => $rm)
-        <div class="roadmap-stages {{ $i === 0 ? '' : 'd-none' }}" id="stages-lanjutan-{{ $rm->id }}">
+        @foreach($lanjutanRoadmaps as $rm)
+        <div class="roadmap-stages {{ $loop->first ? '' : 'd-none' }}" id="stages-lanjutan-{{ $rm->id }}">
             @if(!$rm->is_enrolled)
             <div style="margin-bottom:1.5rem;">
                 <form method="POST" action="{{ route('roadmap.enroll', $rm->id) }}" style="display:inline;">

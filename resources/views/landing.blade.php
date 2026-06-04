@@ -764,11 +764,11 @@ a.feature-card {
         </div>
         <div class="hero-stat">
             <div class="stat-check">✓</div>
-            15+ materi
+            19 Materi
         </div>
         <div class="hero-stat">
             <div class="stat-check">✓</div>
-            1k siswa
+            1k+ Siswa
         </div>
     </div>
 </section>
@@ -786,20 +786,20 @@ a.feature-card {
             </div>
             <div class="demo-user-info">
                 <div class="demo-user-name">Anatasha Berliane</div>
-                <div class="demo-user-stage">Jaringan Dasar — 75% selesai</div>
+                <div class="demo-user-stage">Jaringan Dasar — 75% Selesai</div>
             </div>
-            <div class="demo-badge">🔥 7 hari streak</div>
+            <div class="demo-badge">🔥 7 Hari streak</div>
         </div>
         <div class="demo-progress-row">
             <span class="demo-progress-label">Progress Minggu Ini</span>
-            <span class="demo-progress-value">10/15 materi</span>
+            <span class="demo-progress-value">19 Materi</span>
         </div>
         <div class="demo-bar">
             <div class="demo-bar-fill"></div>
         </div>
         <div class="demo-stats">
             <div class="demo-stat-box">
-                <div class="demo-stat-value">15</div>
+                <div class="demo-stat-value">19</div>
                 <div class="demo-stat-label">Materi</div>
             </div>
             <div class="demo-stat-box">
@@ -843,8 +843,8 @@ a.feature-card {
             <div class="feature-card-arrow">→</div>
             <div class="feature-icon-wrap">🎯</div>
             <div class="feature-title">Target Belajar</div>
-            <div class="feature-desc">Atur target mingguan dan bulanan, dapatkan pengingat supaya kamu tidak ketinggalan materi.</div>
-            <span class="feature-tag">Reminder Otomatis</span>
+            <div class="feature-desc">Tetapkan target belajar harianmu dan pantau perkembangan belajarmu setiap saat.</div>
+            <span class="feature-tag">Capaian Belajar</span>
         </a>
 
         <a href="{{ auth()->check() ? route('progress') : route('register') }}" class="feature-card reveal">
@@ -858,7 +858,7 @@ a.feature-card {
         <a href="{{ auth()->check() ? route('roadmap') : route('register') }}" class="feature-card reveal">
             <div class="feature-card-arrow">→</div>
             <div class="feature-icon-wrap">📚</div>
-            <div class="feature-title">15+ Materi Lengkap</div>
+            <div class="feature-title">19 Materi Lengkap</div>
             <div class="feature-desc">Video berdasarkan CP 1, 2, 4 & 6 yang selalu diperbarui sesuai teknologi terkini.</div>
             <span class="feature-tag">CP-Based Content</span>
         </a>
@@ -869,7 +869,7 @@ a.feature-card {
 <!-- STATS STRIP -->
 <div class="stats-strip reveal">
     <div class="stat-item">
-        <div class="stat-number">15<span>+</span></div>
+        <div class="stat-number">19<span>+</span></div>
         <div class="stat-label">📚 Total Materi</div>
     </div>
     <div class="stat-item">

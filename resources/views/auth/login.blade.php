@@ -214,7 +214,7 @@ body { background: var(--white); min-height: 100vh; }
             <p class="left-sub">Yuk, lanjut belajar dari mana kamu berhenti.</p>
             <div class="login-stats">
                 <div class="login-stat-card">
-                    <div class="login-stat-number">15+</div>
+                    <div class="login-stat-number">19</div>
                     <div class="login-stat-label">📚 Materi tersedia</div>
                 </div>
                 <div class="login-stat-card">
