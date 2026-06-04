@@ -41,9 +41,21 @@
     border-color: var(--primary); box-shadow: 0 0 0 3px rgba(55,36,102,.08);
   }
   .f-select { appearance: none; -webkit-appearance: none; cursor: pointer; }
-  .f-textarea { resize: vertical; min-height: 88px; }
+
+  .f-input[readonly]:not(#deadline):not(#start_date) {
+    background: var(--gray-100);
+    color: var(--gray-600);
+    cursor: not-allowed;
+  }
 
   .sel-wrap { position: relative; }
+  .sel-wrap.has-arrow::after {
+    content: ''; position: absolute; right: 15px; top: 50%;
+    transform: translateY(-50%); pointer-events: none;
+    width: 0; height: 0;
+    border-left: 5px solid transparent; border-right: 5px solid transparent;
+    border-top: 6px solid var(--gray-400);
+  }
   .sel-wrap.has-calendar::after {
     content: '';
     position: absolute; right: 14px; top: 50%;
@@ -68,7 +80,6 @@
   .btn-save:not(:disabled) { background: var(--primary); color: #fff; box-shadow: 0 4px 16px rgba(55,36,102,.25); }
   .btn-save:not(:disabled):hover { background: var(--primary-light); transform: translateY(-1px); }
 
-  /* Flatpickr custom styling */
   .flatpickr-calendar {
     border-radius: 12px !important;
     box-shadow: 0 8px 32px rgba(55,36,102,.15) !important;
@@ -80,9 +91,7 @@
     background: var(--primary) !important;
     border-color: var(--primary) !important;
   }
-  .flatpickr-day:hover {
-    background: rgba(55,36,102,.08) !important;
-  }
+  .flatpickr-day:hover { background: rgba(55,36,102,.08) !important; }
   .flatpickr-months .flatpickr-month,
   .flatpickr-weekdays,
   span.flatpickr-weekday {
@@ -91,27 +100,10 @@
     border-radius: 10px 10px 0 0;
   }
   .flatpickr-current-month .flatpickr-monthDropdown-months,
-  .flatpickr-current-month input.cur-year {
-    color: #fff !important;
-  }
+  .flatpickr-current-month input.cur-year { color: #fff !important; }
   .flatpickr-prev-month svg,
-  .flatpickr-next-month svg {
-    fill: #fff !important;
-  }
-
-  /* FIX 1: Cursor pointer untuk kedua input tanggal (bukan hanya #deadline) */
-  #start_date,
-  #deadline {
-    cursor: pointer;
-    background: #fff;
-  }
-
-  /* Input readonly non-tanggal tetap not-allowed */
-  .f-input[readonly]:not(#start_date):not(#deadline) {
-    background: var(--gray-100);
-    color: var(--gray-600);
-    cursor: not-allowed;
-  }
+  .flatpickr-next-month svg { fill: #fff !important; }
+  #deadline, #start_date { cursor: pointer; background: #fff; padding-right: 40px; }
 
   .toast {
     position: fixed; bottom: 22px; right: 22px;
@@ -129,6 +121,7 @@
   @media (max-width: 560px) {
     .page-hdr h1 { font-size: 20px; }
     .form-card { padding: 20px 16px; }
+    .date-row { flex-direction: column !important; }
   }
 </style>
 @endpush
@@ -153,16 +146,33 @@
     @csrf
     @if(isset($target)) @method('PUT') @endif
 
-    {{-- Field 1: nama target — hidden, auto-filled --}}
+    {{-- Field 1: nama target --}}
     <div class="field">
       <label class="field-lbl" for="name_display">Apa yang ingin kamu capai?</label>
       <input type="text" class="f-input" id="name_display"
-            value="Menyelesaikan Materi Video" readonly>
+             value="Menyelesaikan Materi Video" readonly>
       <input type="hidden" name="name" value="Menyelesaikan Materi Video">
       <span class="field-hint">Jenis target sudah ditentukan secara otomatis</span>
     </div>
 
-    {{-- Field 2: jumlah --}}
+    {{-- Field 2: pilih roadmap --}}
+    <div class="field">
+      <label class="field-lbl" for="roadmap_id">Roadmap Terkait</label>
+      <div class="sel-wrap has-arrow">
+        <select class="f-select" id="roadmap_id" name="roadmap_id">
+          <option value="">-- Tidak terkait roadmap --</option>
+          @foreach($roadmaps as $roadmap)
+            <option value="{{ $roadmap->id }}"
+              {{ old('roadmap_id', $target->roadmap_id ?? '') == $roadmap->id ? 'selected' : '' }}>
+              {{ $roadmap->title }}
+            </option>
+          @endforeach
+        </select>
+      </div>
+      <span class="field-hint">Hubungkan target ini dengan roadmap yang sedang kamu pelajari</span>
+    </div>
+
+    {{-- Field 3: jumlah --}}
     <div class="field">
       <label class="field-lbl" for="target_value">Berapa Banyak?</label>
       <input type="number" class="f-input" id="target_value" name="target_value"
@@ -176,16 +186,16 @@
       <span class="err-msg" id="valErr">Wajib masukkan jumlah (minimal 1)</span>
     </div>
 
-    {{-- Field 3: durasi target — tanggal mulai & selesai --}}
+    {{-- Field 4: durasi target --}}
     <div class="field">
       <label class="field-lbl">Durasi Target</label>
-      <div style="display: flex; gap: 12px;">
+      <div class="date-row" style="display: flex; gap: 12px;">
         <div style="flex: 1;">
           <div class="sel-wrap has-calendar">
             <input type="text" class="f-input" id="start_date" name="start_date"
-                  placeholder="Tanggal mulai..."
-                  value="{{ old('start_date', isset($target) ? $target->start_date?->format('Y-m-d') : '') }}"
-                  autocomplete="off" readonly required>
+                   placeholder="Tanggal mulai..."
+                   value="{{ old('start_date', isset($target) ? $target->start_date?->format('Y-m-d') : '') }}"
+                   autocomplete="off" readonly required>
           </div>
           <span class="field-hint">Tanggal mulai</span>
           <span class="err-msg" id="startErr">Wajib pilih tanggal mulai</span>
@@ -193,9 +203,9 @@
         <div style="flex: 1;">
           <div class="sel-wrap has-calendar">
             <input type="text" class="f-input" id="deadline" name="deadline"
-                  placeholder="Tanggal selesai..."
-                  value="{{ old('deadline', isset($target) ? $target->deadline?->format('Y-m-d') : '') }}"
-                  autocomplete="off" readonly required>
+                   placeholder="Tanggal selesai..."
+                   value="{{ old('deadline', isset($target) ? $target->deadline?->format('Y-m-d') : '') }}"
+                   autocomplete="off" readonly required>
           </div>
           <span class="field-hint">Tanggal selesai</span>
           <span class="err-msg" id="deadlineErr">Wajib pilih tanggal selesai</span>
@@ -224,8 +234,7 @@
   const startErr    = document.getElementById('startErr');
   const deadlineErr = document.getElementById('deadlineErr');
 
-  // FIX 2: Tambah onClose di startPicker agar check() terpanggil saat kalender ditutup
-  const startPicker = flatpickr("#start_date", {
+  flatpickr("#start_date", {
     locale: "id",
     dateFormat: "Y-m-d",
     minDate: "today",
@@ -233,7 +242,6 @@
     onChange: function(selectedDates, dateStr) {
       startErr.style.display = 'none';
       startEl.style.borderColor = '';
-      // Update minDate deadline agar tidak bisa lebih awal dari tanggal mulai
       if (deadlinePicker) deadlinePicker.set('minDate', dateStr);
       check();
     },
@@ -283,7 +291,6 @@
     check();
   });
 
-  // Jalankan check awal (untuk mode edit yang sudah ada value)
   check();
 
   @if($errors->any())

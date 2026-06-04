@@ -73,4 +73,9 @@ class Roadmap extends Model
         $enrollment = $this->userRoadmaps()->where('user_id', $userId)->first();
         return $enrollment ? $enrollment->progress : 0;
     }
+
+    public function targets(): HasMany
+    {
+        return $this->hasMany(Target::class);
+    }
 }

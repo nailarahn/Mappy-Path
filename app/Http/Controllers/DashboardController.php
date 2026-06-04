@@ -276,6 +276,17 @@ class DashboardController extends Controller
             'activity'         => 'study',
         ]);
 
+        // Auto update target yang terhubung ke roadmap ini
+        $activeTarget = $user->targets()
+            ->where('roadmap_id', $roadmapId)
+            ->where('status', 'active')
+            ->first();
+
+        if ($activeTarget) {
+            $activeTarget->increment('current_value');
+            $activeTarget->checkAndUpdateStatus();
+        }
+
         // Cari next stage
         $roadmap = Roadmap::with([
                 'stages' => fn($q) => $q->orderBy('order')
@@ -291,7 +302,6 @@ class DashboardController extends Controller
         $nextStage = $stageIds[$currentIdx + 1] ?? null;
 
         if ($nextStage) {
-
             return redirect()->route('roadmap.stage', [
                 'roadmapId' => $roadmapId,
                 'stageId'   => $nextStage,
@@ -302,7 +312,6 @@ class DashboardController extends Controller
             ->route('roadmap')
             ->with('success', 'Selamat! Kamu telah menyelesaikan semua materi di roadmap ini 🏆');
     }
-
     
     // TARGET
     public function target()
@@ -321,7 +330,8 @@ class DashboardController extends Controller
 
     public function targetCreate()
     {
-        return view('dashboard.targetform');
+        $roadmaps = Roadmap::where('is_active', true)->orderBy('title')->get();
+        return view('dashboard.targetform', compact('roadmaps'));
     }
 
     public function targetStore(Request $request)
@@ -331,11 +341,13 @@ class DashboardController extends Controller
             'target_value' => 'required|integer|min:1',
             'start_date'   => 'nullable|date',
             'deadline'     => 'nullable|date',
+            'roadmap_id'   => 'nullable|exists:roadmaps,id',
         ]);
 
         Auth::user()->targets()->create([
             'name'          => $request->name,
             'description'   => $request->description,
+            'roadmap_id'    => $request->roadmap_id,
             'target_value'  => $request->target_value,
             'current_value' => 0,
             'start_date'    => $request->start_date,
@@ -350,9 +362,9 @@ class DashboardController extends Controller
 
     public function targetEdit($id)
     {
-        $target = Auth::user()->targets()->findOrFail($id);
-
-        return view('dashboard.targetform', compact('target'));
+        $target   = Auth::user()->targets()->findOrFail($id);
+        $roadmaps = Roadmap::where('is_active', true)->orderBy('title')->get();
+        return view('dashboard.targetform', compact('target', 'roadmaps'));
     }
 
     public function targetUpdate(Request $request, $id)
@@ -362,6 +374,7 @@ class DashboardController extends Controller
             'target_value' => 'required|integer|min:1',
             'start_date'   => 'nullable|date',
             'deadline'     => 'nullable|date',
+            'roadmap_id'   => 'nullable|exists:roadmaps,id',
         ]);
 
         $target = Auth::user()->targets()->findOrFail($id);
@@ -369,6 +382,7 @@ class DashboardController extends Controller
         $target->update([
             'name'         => $request->name,
             'description'  => $request->description,
+            'roadmap_id'   => $request->roadmap_id,
             'target_value' => $request->target_value,
             'start_date'   => $request->start_date,
             'deadline'     => $request->deadline,
