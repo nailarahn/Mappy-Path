@@ -205,7 +205,7 @@
         $deadlineLabel = '';
         if ($target->deadline) {
           $end   = $target->deadline;
-          $start = $end->copy()->startOfWeek(\Carbon\Carbon::MONDAY);
+          $start = $target->start_date ?? $end->copy()->startOfWeek(\Carbon\Carbon::MONDAY);
           $deadlineLabel = $start->translatedFormat('j M') . ' - ' . $end->translatedFormat('j M Y');
         }
       @endphp

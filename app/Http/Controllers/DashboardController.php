@@ -329,6 +329,7 @@ class DashboardController extends Controller
         $request->validate([
             'name'         => 'required|string|max:255',
             'target_value' => 'required|integer|min:1',
+            'start_date'   => 'nullable|date',
             'deadline'     => 'nullable|date',
         ]);
 
@@ -337,6 +338,7 @@ class DashboardController extends Controller
             'description'   => $request->description,
             'target_value'  => $request->target_value,
             'current_value' => 0,
+            'start_date'    => $request->start_date,
             'deadline'      => $request->deadline,
             'status'        => 'active',
         ]);
@@ -358,6 +360,7 @@ class DashboardController extends Controller
         $request->validate([
             'name'         => 'required|string|max:255',
             'target_value' => 'required|integer|min:1',
+            'start_date'   => 'nullable|date',
             'deadline'     => 'nullable|date',
         ]);
 
@@ -367,6 +370,7 @@ class DashboardController extends Controller
             'name'         => $request->name,
             'description'  => $request->description,
             'target_value' => $request->target_value,
+            'start_date'   => $request->start_date,
             'deadline'     => $request->deadline,
         ]);
 
