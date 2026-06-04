@@ -12,6 +12,7 @@ use App\Models\LearningLog;
 
 class DashboardController extends Controller
 {
+
     public function index()
     {
         $user = Auth::user();
@@ -23,24 +24,88 @@ class DashboardController extends Controller
             ->latest()
             ->first();
 
-        // Roadmap yang sudah diambil user
-        $enrolledIds = UserRoadmap::where('user_id', $user->id)
-            ->pluck('roadmap_id');
+        // ✅ BARU: Rekomendasi = stage berikutnya yang belum selesai
+        $recommendations = collect();
 
-        // Recommendation roadmap
-        $recommendations = Roadmap::where('is_active', true)
-            ->whereNotIn('id', $enrolledIds)
-            ->limit(3)
-            ->get()
-            ->map(function ($r) {
+        // Stage yang sudah selesai oleh user (semua roadmap)
+        $completedStageIds = UserStage::where('user_id', $user->id)
+            ->where('is_completed', true)
+            ->pluck('stage_id')
+            ->toArray();
+
+        if ($activeEnrollment) {
+            // User punya roadmap aktif → cari stage yang belum selesai
+            $roadmap = Roadmap::with(['stages' => fn($q) => $q->where('is_active', true)->orderBy('order')])
+                ->find($activeEnrollment->roadmap_id);
+
+            if ($roadmap) {
+                $nextStages = $roadmap->stages
+                    ->whereNotIn('id', $completedStageIds)
+                    ->take(3);
+
+                $typeIcons = [
+                    'video'    => ['icon' => '🎬', 'color' => '#372466'],
+                    'article'  => ['icon' => '📄', 'color' => '#0ea5e9'],
+                    'quiz'     => ['icon' => '🧠', 'color' => '#f59e0b'],
+                    'practice' => ['icon' => '⚙️', 'color' => '#22c55e'],
+                ];
+
+                $recommendations = $nextStages->map(function ($stage) use ($roadmap, $typeIcons) {
+                    $meta = $typeIcons[$stage->type] ?? ['icon' => '📚', 'color' => '#372466'];
+                    return [
+                        'title'      => $stage->title,
+                        'type'       => $stage->getTypeLabel(),
+                        'duration'   => $stage->estimated_minutes . ' menit',
+                        'icon'       => $meta['icon'],
+                        'color'      => $meta['color'],
+                        // ✅ Link langsung ke stage
+                        'route'      => route('roadmap.stage', [
+                            'roadmapId' => $roadmap->id,
+                            'stageId'   => $stage->id,
+                        ]),
+                    ];
+                });
+            }
+        }
+
+        // Kalau rekomendasi kosong (user baru / semua stage selesai)
+        // → tampilkan stage pertama dari roadmap yang tersedia
+        if ($recommendations->isEmpty()) {
+            $roadmapsAvailable = Roadmap::with(['stages' => fn($q) => $q->where('is_active', true)->orderBy('order')])
+                ->where('is_active', true)
+                ->orderBy('order')
+                ->limit(3)
+                ->get();
+
+            $recommendations = $roadmapsAvailable->map(function ($rm) {
+                $firstStage = $rm->stages->first();
                 return [
-                    'title'    => $r->title,
-                    'type'     => 'Video',
-                    'duration' => $r->estimated_hours . ' jam',
-                    'icon'     => '🌐',
+                    'title'    => $firstStage ? $rm->title . ' — ' . $firstStage->title : $rm->title,
+                    'type'     => $firstStage ? $firstStage->getTypeLabel() : 'Roadmap',
+                    'duration' => $firstStage ? $firstStage->estimated_minutes . ' menit' : $rm->estimated_hours . ' jam',
+                    'icon'     => '🚀',
                     'color'    => '#372466',
+                    // Kalau belum enrolled, arahkan ke halaman roadmap dulu
+                    'route'    => route('roadmap'),
                 ];
             });
+        }
+
+        // Materi selesai (untuk stat card)
+        $materiSelesai = UserStage::where('user_id', $user->id)
+            ->where('is_completed', true)
+            ->count();
+
+        $totalMateri = $activeEnrollment
+            ? ($activeEnrollment->roadmap->total_stages ?? 0)
+            : 0;
+
+        // Target minggu ini
+        $targetSelesai = $user->activeTargets()
+            ->whereColumn('current_value', '>=', 'target_value')
+            ->count();
+
+        $totalTarget = $user->activeTargets()->count();
 
         // Total menit belajar minggu ini
         $weeklyMinutes = LearningLog::where('user_id', $user->id)
@@ -50,11 +115,9 @@ class DashboardController extends Controller
             ])
             ->sum('duration_minutes');
 
-        // Progress mingguan
+        // Progress mingguan untuk chart
         $progressData = [];
-
         for ($i = 3; $i >= 0; $i--) {
-
             $start = now()->subWeeks($i)->startOfWeek()->toDateString();
             $end   = now()->subWeeks($i)->endOfWeek()->toDateString();
 
@@ -73,7 +136,11 @@ class DashboardController extends Controller
             'progressData',
             'recommendations',
             'activeEnrollment',
-            'weeklyMinutes'
+            'weeklyMinutes',
+            'materiSelesai',
+            'totalMateri',
+            'targetSelesai',
+            'totalTarget',
         ));
     }
 

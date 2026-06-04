@@ -292,7 +292,7 @@ canvas { max-width: 100%; }
     <div class="card-header">Rekomendasi Materi Untukmu</div>
 
     @foreach($recommendations as $rec)
-        <a href="{{ route('roadmap') }}" class="rec-item">
+        <a href="{{ $rec['route'] }}" class="rec-item">
             <div class="rec-icon" style="background:{{ $rec['color'] }}22;">
                 {{ $rec['icon'] }}
             </div>
