@@ -387,9 +387,15 @@ body {
 
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 1.25rem;
 }
+.features-grid .feature-card:nth-child(1) { grid-column: span 2; }
+.features-grid .feature-card:nth-child(2) { grid-column: span 2; }
+.features-grid .feature-card:nth-child(3) { grid-column: span 2; }
+.features-grid .feature-card:nth-child(4) { grid-column: 2 / span 2; }
+.features-grid .feature-card:nth-child(5) { grid-column: 4 / span 2; }
+
 
 a.feature-card {
     text-decoration: none;
@@ -758,11 +764,11 @@ a.feature-card {
         </div>
         <div class="hero-stat">
             <div class="stat-check">✓</div>
-            56+ materi
+            15+ materi
         </div>
         <div class="hero-stat">
             <div class="stat-check">✓</div>
-            1000+ siswa
+            1k siswa
         </div>
     </div>
 </section>
@@ -786,14 +792,14 @@ a.feature-card {
         </div>
         <div class="demo-progress-row">
             <span class="demo-progress-label">Progress Minggu Ini</span>
-            <span class="demo-progress-value">20/15 materi</span>
+            <span class="demo-progress-value">10/15 materi</span>
         </div>
         <div class="demo-bar">
             <div class="demo-bar-fill"></div>
         </div>
         <div class="demo-stats">
             <div class="demo-stat-box">
-                <div class="demo-stat-value">64</div>
+                <div class="demo-stat-value">15</div>
                 <div class="demo-stat-label">Materi</div>
             </div>
             <div class="demo-stat-box">
@@ -855,14 +861,6 @@ a.feature-card {
             <div class="feature-title">15+ Materi Lengkap</div>
             <div class="feature-desc">Video berdasarkan CP 1, 2, 4 & 6 yang selalu diperbarui sesuai teknologi terkini.</div>
             <span class="feature-tag">CP-Based Content</span>
-        </a>
-
-        <a href="{{ auth()->check() ? route('roadmap') : route('register') }}" class="feature-card reveal">
-            <div class="feature-card-arrow">→</div>
-            <div class="feature-icon-wrap">💡</div>
-            <div class="feature-title">Rekomendasi Cerdas</div>
-            <div class="feature-desc">Sistem akan merekomendasikan materi yang paling relevan berdasarkan progres dan minatmu.</div>
-            <span class="feature-tag">Personalisasi</span>
         </a>
 
     </div>
