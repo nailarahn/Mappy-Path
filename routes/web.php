@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\PengaturanController;
 
 // Landing Page
 Route::get('/', function () {
@@ -47,7 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
 
     // Pengaturan
-    Route::get('/pengaturan', [SettingController::class, 'index'])->name('pengaturan.index');
-    Route::put('/pengaturan', [SettingController::class, 'update'])->name('pengaturan.update');
-    Route::put('/pengaturan/password', [SettingController::class, 'updatePassword'])->name('pengaturan.password');
+    Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');
+    Route::put('/pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');
+    Route::put('/pengaturan/password', [PengaturanController::class, 'updatePassword'])->name('pengaturan.password');
 });
