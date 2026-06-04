@@ -215,6 +215,25 @@
     text-align: right; 
 }
 
+.enroll-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    background: var(--primary);
+    color: white;
+    padding: .65rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: .875rem;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font);
+    transition: all .2s;
+}
+.enroll-btn:hover {
+    background: #4e35a0;
+}
+
 @media (max-width: 640px) {
     .stage-list::before { left: 22px; }
     .stage-num { width: 38px; height: 38px; font-size: 0.8rem; }
@@ -237,103 +256,106 @@
     <button class="level-tab" onclick="switchLevel('lanjutan', this)">Lanjutan</button>
 </div>
 
+{{-- ==================== TAB DASAR ==================== --}}
 <div class="tab-content active" id="tab-dasar">
-   @php $dasarRoadmaps = collect($roadmaps)->where('level', 'beginner'); @endphp
+    @php $dasarRoadmaps = collect($roadmaps)->where('level', 'beginner'); @endphp
 
     @if($dasarRoadmaps->isEmpty())
         <div style="text-align:center;padding:3rem;color:var(--gray-400);">Belum ada roadmap level dasar.</div>
     @else
 
     <div class="roadmap-pills" id="pills-dasar">
-            @foreach($dasarRoadmaps as $i => $rm)
-            <button class="roadmap-pill {{ $i === 0 ? 'active' : '' }}"
-                    onclick="switchRoadmap('dasar', {{ $rm->id }}, this)">
-                {{ $rm->title }}
-                @if($rm->is_enrolled)
-                    <span style="opacity:.7">✓</span>
-                @endif
-            </button>
-            @endforeach
-        </div>
-
         @foreach($dasarRoadmaps as $i => $rm)
-        <div class="roadmap-stages {{ $i === 0 ? '' : 'd-none' }}" id="stages-dasar-{{ $rm->id }}">
-
+        <button class="roadmap-pill {{ $i === 0 ? 'active' : '' }}"
+                onclick="switchRoadmap('dasar', {{ $rm->id }}, this)">
+            {{ $rm->title }}
             @if($rm->is_enrolled)
-            <div class="roadmap-progress-bar">
-                <span class="label">Progress kamu</span>
-                <div class="bar">
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width:{{ $rm->user_progress }}%"></div>
-                    </div>
+                <span style="opacity:.7">✓</span>
+            @endif
+        </button>
+        @endforeach
+    </div>
+
+    @foreach($dasarRoadmaps as $i => $rm)
+    <div class="roadmap-stages {{ $i === 0 ? '' : 'd-none' }}" id="stages-dasar-{{ $rm->id }}">
+
+        @if($rm->is_enrolled)
+        <div class="roadmap-progress-bar">
+            <span class="label">Progress kamu</span>
+            <div class="bar">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width:{{ $rm->user_progress }}%"></div>
                 </div>
-                <span class="pct">{{ $rm->user_progress }}%</span>
             </div>
-            @else
-            <div style="margin-bottom:1.5rem;">
-                <a href="{{ route('roadmap.enroll', $rm->id) }}"
-                   style="display:inline-flex;align-items:center;gap:.5rem;background:var(--primary);color:white;padding:.65rem 1.5rem;border-radius:10px;font-weight:600;font-size:.875rem;text-decoration:none;transition:all .2s;"
-                   onmouseover="this.style.background='#4e35a0'" onmouseout="this.style.background='var(--primary)'">
+            <span class="pct">{{ $rm->user_progress }}%</span>
+        </div>
+        @else
+        <div style="margin-bottom:1.5rem;">
+            <form method="POST" action="{{ route('roadmap.enroll', $rm->id) }}" style="display:inline;">
+                @csrf
+                <button type="submit" class="enroll-btn">
                     + Mulai Roadmap Ini
-                </a>
+                </button>
+            </form>
+        </div>
+        @endif
+
+        <div class="stage-list">
+            @foreach($rm->stages as $stage)
+            @php
+                $isDone    = in_array($stage->id, $completedStageIds);
+                $isCurrent = !$isDone && $rm->is_enrolled && $loop->index === $rm->stages->where('id', collect($completedStageIds)->last())->keys()->first() + 1;
+                $isLocked  = !$rm->is_enrolled && !$isDone;
+                $isFirst   = $loop->first;
+                $canAccess = $rm->is_enrolled || $isFirst;
+            @endphp
+
+            @if($canAccess && !$isLocked)
+            <a href="{{ route('roadmap.stage', ['roadmapId' => $rm->id, 'stageId' => $stage->id]) }}"
+               class="stage-item {{ $isDone ? 'done' : ($isCurrent ? 'current' : '') }}">
+            @else
+            <div class="stage-item locked">
+            @endif
+                <div class="stage-num {{ $isDone ? 'done' : ($isCurrent ? 'current' : '') }}">
+                    @if($isDone)
+                        ✓
+                    @else
+                        {{ $loop->iteration }}
+                    @endif
+                </div>
+                <div class="stage-info">
+                    <div class="stage-title">{{ $stage->title }}</div>
+                    <div class="stage-meta">{{ $stage->getTypeLabel() }} · {{ $stage->estimated_minutes }} menit</div>
+                </div>
+                <div class="stage-action {{ $isDone ? 'done-icon' : ($isLocked ? 'lock-icon' : 'arrow-icon') }}">
+                    @if($isDone)
+                        <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+                            <circle cx="13" cy="13" r="13" fill="#22c55e"/>
+                            <path d="M7 13l4 4 8-8" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    @elseif($isLocked)
+                        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                            <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+                        </svg>
+                    @else
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
+                    @endif
+                </div>
+            @if($canAccess && !$isLocked)
+            </a>
+            @else
             </div>
             @endif
-
-            <div class="stage-list">
-                @foreach($rm->stages as $stage)
-                @php
-                    $isDone    = in_array($stage->id, $completedStageIds);
-                    $isCurrent = !$isDone && $rm->is_enrolled && $loop->index === $rm->stages->where('id', collect($completedStageIds)->last())->keys()->first() + 1;
-                    $isLocked  = !$rm->is_enrolled && !$isDone;
-                    $isFirst   = $loop->first;
-                    $canAccess = $rm->is_enrolled || $isFirst;
-                @endphp
-
-                @if($canAccess && !$isLocked)
-                <a href="{{ route('roadmap.stage', ['roadmapId' => $rm->id, 'stageId' => $stage->id]) }}"
-                   class="stage-item {{ $isDone ? 'done' : ($isCurrent ? 'current' : '') }}">
-                @else
-                <div class="stage-item locked">
-                @endif
-                    <div class="stage-num {{ $isDone ? 'done' : ($isCurrent ? 'current' : '') }}">
-                        @if($isDone)
-                            ✓
-                        @else
-                            {{ $loop->iteration }}
-                        @endif
-                    </div>
-                    <div class="stage-info">
-                        <div class="stage-title">{{ $stage->title }}</div>
-                        <div class="stage-meta">{{ $stage->getTypeLabel() }} · {{ $stage->estimated_minutes }} menit</div>
-                    </div>
-                    <div class="stage-action {{ $isDone ? 'done-icon' : ($isLocked ? 'lock-icon' : 'arrow-icon') }}">
-                        @if($isDone)
-                            <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
-                                <circle cx="13" cy="13" r="13" fill="#22c55e"/>
-                                <path d="M7 13l4 4 8-8" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        @elseif($isLocked)
-                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
-                            </svg>
-                        @else
-                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                <path d="M9 18l6-6-6-6"/>
-                            </svg>
-                        @endif
-                    </div>
-                @if($canAccess && !$isLocked)
-                </a>
-                @else
-                </div>
-                @endif
-                @endforeach
-            </div>
+            @endforeach
         </div>
-        @endforeach
+    </div>
+    @endforeach
     @endif
 </div>
 
+{{-- ==================== TAB MENENGAH ==================== --}}
 <div class="tab-content" id="tab-menengah">
     @php $menengahRoadmaps = collect($roadmaps)->where('level','intermediate'); @endphp
     @if($menengahRoadmaps->isEmpty())
@@ -352,12 +374,21 @@
             @if($rm->is_enrolled)
             <div class="roadmap-progress-bar">
                 <span class="label">Progress kamu</span>
-                <div class="bar"><div class="progress-bar"><div class="progress-fill" style="width:{{ $rm->user_progress }}%"></div></div></div>
+                <div class="bar">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width:{{ $rm->user_progress }}%"></div>
+                    </div>
+                </div>
                 <span class="pct">{{ $rm->user_progress }}%</span>
             </div>
             @else
             <div style="margin-bottom:1.5rem;">
-                <a href="{{ route('roadmap.enroll', $rm->id) }}" style="display:inline-flex;align-items:center;gap:.5rem;background:var(--primary);color:white;padding:.65rem 1.5rem;border-radius:10px;font-weight:600;font-size:.875rem;text-decoration:none;">+ Mulai Roadmap Ini</a>
+                <form method="POST" action="{{ route('roadmap.enroll', $rm->id) }}" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="enroll-btn">
+                        + Mulai Roadmap Ini
+                    </button>
+                </form>
             </div>
             @endif
             <div class="stage-list">
@@ -374,9 +405,13 @@
                         <div class="stage-meta">{{ $stage->getTypeLabel() }} · {{ $stage->estimated_minutes }} menit</div>
                     </div>
                     <div class="stage-action {{ $isDone ? 'done-icon' : ($rm->is_enrolled ? 'arrow-icon' : 'lock-icon') }}">
-                        @if($isDone)<svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="13" fill="#22c55e"/><path d="M7 13l4 4 8-8" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        @elseif(!$rm->is_enrolled)<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-                        @else<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>@endif
+                        @if($isDone)
+                            <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="13" fill="#22c55e"/><path d="M7 13l4 4 8-8" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        @elseif(!$rm->is_enrolled)
+                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                        @else
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                        @endif
                     </div>
                 @if($rm->is_enrolled)</a>@else</div>@endif
                 @endforeach
@@ -386,6 +421,7 @@
     @endif
 </div>
 
+{{-- ==================== TAB LANJUTAN ==================== --}}
 <div class="tab-content" id="tab-lanjutan">
     @php $lanjutanRoadmaps = collect($roadmaps)->where('level','advanced'); @endphp
     @if($lanjutanRoadmaps->isEmpty())
@@ -401,23 +437,35 @@
         <div class="roadmap-stages {{ $i === 0 ? '' : 'd-none' }}" id="stages-lanjutan-{{ $rm->id }}">
             @if(!$rm->is_enrolled)
             <div style="margin-bottom:1.5rem;">
-                <a href="{{ route('roadmap.enroll', $rm->id) }}" style="display:inline-flex;align-items:center;gap:.5rem;background:var(--primary);color:white;padding:.65rem 1.5rem;border-radius:10px;font-weight:600;font-size:.875rem;text-decoration:none;">+ Mulai Roadmap Ini</a>
+                <form method="POST" action="{{ route('roadmap.enroll', $rm->id) }}" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="enroll-btn">
+                        + Mulai Roadmap Ini
+                    </button>
+                </form>
             </div>
             @endif
             <div class="stage-list">
                 @foreach($rm->stages as $stage)
                 @php $isDone = in_array($stage->id, $completedStageIds); @endphp
-                @if($rm->is_enrolled)<a href="{{ route('roadmap.stage', ['roadmapId' => $rm->id, 'stageId' => $stage->id]) }}" class="stage-item">
-                @else<div class="stage-item locked">@endif
+                @if($rm->is_enrolled)
+                <a href="{{ route('roadmap.stage', ['roadmapId' => $rm->id, 'stageId' => $stage->id]) }}" class="stage-item">
+                @else
+                <div class="stage-item locked">
+                @endif
                     <div class="stage-num {{ $isDone ? 'done' : '' }}">{{ $isDone ? '✓' : $loop->iteration }}</div>
                     <div class="stage-info">
                         <div class="stage-title">{{ $stage->title }}</div>
                         <div class="stage-meta">{{ $stage->getTypeLabel() }} · {{ $stage->estimated_minutes }} menit</div>
                     </div>
                     <div class="stage-action {{ $isDone ? 'done-icon' : ($rm->is_enrolled ? 'arrow-icon' : 'lock-icon') }}">
-                        @if($isDone)<svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="13" fill="#22c55e"/><path d="M7 13l4 4 8-8" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        @elseif(!$rm->is_enrolled)<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-                        @else<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>@endif
+                        @if($isDone)
+                            <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="13" fill="#22c55e"/><path d="M7 13l4 4 8-8" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        @elseif(!$rm->is_enrolled)
+                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                        @else
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                        @endif
                     </div>
                 @if($rm->is_enrolled)</a>@else</div>@endif
                 @endforeach
@@ -439,11 +487,8 @@ function switchLevel(level, btn) {
 }
 
 function switchRoadmap(level, roadmapId, btn) {
-
     document.querySelectorAll(`[id^="stages-${level}-"]`).forEach(el => el.classList.add('d-none'));
-
     document.querySelectorAll(`#pills-${level} .roadmap-pill`).forEach(b => b.classList.remove('active'));
-
     document.getElementById(`stages-${level}-${roadmapId}`)?.classList.remove('d-none');
     btn.classList.add('active');
 }
