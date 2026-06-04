@@ -3,7 +3,6 @@
 @section('title', 'Dashboard')
 
 @push('styles')
-
 <style>
 .page-header { margin-bottom: 1.75rem; }
 .page-greeting { font-size: 1.75rem; font-weight: 800; color: var(--primary); }
@@ -19,6 +18,7 @@
     align-items: center;
     gap: 1.25rem;
 }
+
 .continue-icon {
     width: 70px;
     height: 70px;
@@ -30,9 +30,13 @@
     font-size: 1.8rem;
     flex-shrink: 0;
 }
+
 .continue-info { flex: 1; }
+
 .continue-title { font-size: 1.1rem; font-weight: 700; color: var(--gray-800); }
+
 .continue-stage { font-size: 0.82rem; color: var(--gray-400); margin: 0.25rem 0 0.75rem; }
+
 .continue-progress { margin-bottom: 0.75rem; }
 
 .rec-item {
@@ -46,8 +50,11 @@
     color:inherit;
     transition: background 0.2s;
 }
+
 .rec-item:last-child { border-bottom: none; }
+
 .rec-item:hover { background: var(--gray-100); }
+
 .rec-icon {
     width: 44px;
     height: 44px;
@@ -59,9 +66,13 @@
     flex-shrink: 0;
 }
 .rec-info { flex: 1; }
+
 .rec-title { font-size: 0.9rem; font-weight: 600; color: var(--gray-800); }
+
 .rec-meta { font-size: 0.78rem; color: var(--gray-400); }
+
 .rec-arrow { color: var(--gray-300); font-size: 1rem; }
+
 .rec-arrow:hover { color: var(--primary); }
 
 canvas { max-width: 100%; }
@@ -126,75 +137,95 @@ canvas { max-width: 100%; }
 <!-- STAT CARDS -->
 <div class="stat-cards">
 
+    {{-- TOTAL PROGRESS --}}
     <a href="{{ route('progress') }}" class="stat-card-link">
-    <div class="stat-card">
-        <div class="stat-card-header">
-            <span class="stat-label">Total Progress</span>
-            <div class="stat-icon" style="background:#ede9ff;">📊</div>
-        </div>
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <span class="stat-label">Total Progress</span>
+                <div class="stat-icon" style="background:#ede9ff;">📊</div>
+            </div>
 
-        <div class="stat-value">
-            {{ $activeEnrollment?->progress ?? 0 }}%
-        </div>
+            <div class="stat-value">
+                {{ $activeEnrollment?->progress ?? 0 }}%
+            </div>
 
-        <div class="stat-progress">
-            <div class="progress-bar">
-                <div class="progress-fill"
-                     style="width:{{ $activeEnrollment?->progress ?? 0 }}%">
+            <div class="stat-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill"
+                         style="width:{{ $activeEnrollment?->progress ?? 0 }}%">
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</a>
-
-    <a href="{{ route('roadmap') }}" class="stat-card-link">
-    <div class="stat-card">
-        <div class="stat-card-header">
-            <span class="stat-label">Tahap saat ini</span>
-            <div class="stat-icon" style="background:#fff7ed;">📖</div>
-        </div>
-
-        <div class="stat-value" style="font-size:1.1rem;font-weight:700;margin-top:.25rem;">
-            {{ $activeEnrollment?->roadmap?->title ?? 'Belum Memilih Roadmap' }}
-        </div>
-
-        <div class="stat-progress">
-            <div class="progress-bar">
-                <div class="progress-fill" style="width:{{ $activeEnrollment?->progress ?? 0 }}%"></div>
-            </div>
-        </div>
-    </div>
     </a>
 
+    {{-- TAHAP SAAT INI --}}
+    <a href="{{ route('roadmap') }}" class="stat-card-link">
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <span class="stat-label">Tahap saat ini</span>
+                <div class="stat-icon" style="background:#fff7ed;">📖</div>
+            </div>
+
+            <div class="stat-value" style="font-size:1.1rem;font-weight:700;margin-top:.25rem;">
+                {{ $activeEnrollment?->roadmap?->title ?? 'Belum Memilih Roadmap' }}
+            </div>
+
+            <div class="stat-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill"
+                         style="width:{{ $activeEnrollment?->progress ?? 0 }}%">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </a>
+
+    {{-- MATERI SELESAI --}}
     <a href="{{ route('roadmap') }}" class="stat-card-link">
         <div class="stat-card">
             <div class="stat-card-header">
                 <span class="stat-label">Materi Selesai</span>
                 <div class="stat-icon" style="background:#ecfdf5;">📚</div>
             </div>
+
             <div class="stat-value">
-                10<span style="font-size:1rem;color:var(--gray-400);font-weight:500;">/54</span>
+                {{ $materiSelesai ?? 0 }}
+                <span style="font-size:1rem;color:var(--gray-400);font-weight:500;">
+                    /{{ $totalMateri ?? 0 }}
+                </span>
             </div>
+
             <div class="stat-progress">
                 <div class="progress-bar">
-                    <div class="progress-fill" style="width:18.5%"></div>
+                    <div class="progress-fill"
+                         style="width:{{ ($totalMateri ?? 0) > 0 ? ($materiSelesai / $totalMateri) * 100 : 0 }}%">
+                    </div>
                 </div>
             </div>
         </div>
     </a>
 
+    {{-- TARGET MINGGU --}}
     <a href="{{ route('target') }}" class="stat-card-link">
         <div class="stat-card">
             <div class="stat-card-header">
                 <span class="stat-label">Target Minggu</span>
                 <div class="stat-icon" style="background:#f0fdf4;">🎯</div>
             </div>
+
             <div class="stat-value">
-                4<span style="font-size:1rem;color:var(--gray-400);font-weight:500;">/5</span>
+                {{ $targetSelesai ?? 0 }}
+                <span style="font-size:1rem;color:var(--gray-400);font-weight:500;">
+                    /{{ $totalTarget ?? 0 }}
+                </span>
             </div>
+
             <div class="stat-progress">
                 <div class="progress-bar">
-                    <div class="progress-fill" style="width:80%"></div>
+                    <div class="progress-fill"
+                         style="width:{{ ($totalTarget ?? 0) > 0 ? ($targetSelesai / $totalTarget) * 100 : 0 }}%">
+                    </div>
                 </div>
             </div>
         </div>
