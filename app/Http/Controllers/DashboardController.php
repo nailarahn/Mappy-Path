@@ -386,6 +386,7 @@ class DashboardController extends Controller
         $user = Auth::user();
 
         $targets = $user->targets()
+            ->with('roadmap')
             ->orderByDesc('created_at')
             ->get();
 
