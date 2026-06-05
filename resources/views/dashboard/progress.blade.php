@@ -287,51 +287,49 @@
 
     {{-- STATS --}}
     <div class="stats-grid">
-
         <div class="stats-card" onclick="openStatsModal('hari')">
             <div class="stats-top">
                 <div class="stats-icon">📅</div>
                 <span class="stats-badge badge-blue">↑ aktif</span>
             </div>
             <div class="stats-label">Total Hari Belajar</div>
-            <div class="stats-number">89</div>
-            <div class="stats-small">Sejak Jan 2026</div>
+            <div class="stats-number">{{ $totalHariBelajar }}</div>
+            <div class="stats-small">Sejak pertama belajar</div>
             <div class="stats-click-hint">Lihat detail →</div>
         </div>
 
         <div class="stats-card" onclick="openStatsModal('materi')">
             <div class="stats-top">
                 <div class="stats-icon">📚</div>
-                <span class="stats-badge badge-green">↑ 18%</span>
+                <span class="stats-badge badge-green">Total</span>
             </div>
             <div class="stats-label">Materi Selesai</div>
-            <div class="stats-number">18</div>
-            <div class="stats-small">dari bulan lalu</div>
+            <div class="stats-number">{{ $materiSelesai }}</div>
+            <div class="stats-small">Total materi selesai</div>
             <div class="stats-click-hint">Lihat riwayat →</div>
         </div>
 
         <div class="stats-card" onclick="openStatsModal('jam')">
             <div class="stats-top">
                 <div class="stats-icon">⏱️</div>
-                <span class="stats-badge badge-green">↑ 12%</span>
+                <span class="stats-badge badge-green">Total</span>
             </div>
             <div class="stats-label">Total Jam Belajar</div>
-            <div class="stats-number">265</div>
-            <div class="stats-small">dari bulan lalu</div>
+            <div class="stats-number">{{ $totalJam }}</div>
+            <div class="stats-small">Total jam belajar</div>
             <div class="stats-click-hint">Lihat grafik →</div>
         </div>
 
         <div class="stats-card" onclick="openStatsModal('badge')">
             <div class="stats-top">
                 <div class="stats-icon">🏅</div>
-                <span class="stats-badge badge-purple">6/20</span>
+                <span class="stats-badge badge-purple">{{ $badgeEarned }}/{{ $totalBadge }}</span>
             </div>
             <div class="stats-label">Badge Earned</div>
-            <div class="stats-number">6</div>
-            <div class="stats-small">dari 20 badge</div>
+            <div class="stats-number">{{ $badgeEarned }}</div>
+            <div class="stats-small">dari {{ $totalBadge }} badge</div>
             <div class="stats-click-hint">Lihat koleksi →</div>
         </div>
-
     </div>
 
     {{-- CHART --}}
@@ -455,65 +453,70 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 
+/* ══ DATA DARI CONTROLLER ══ */
+const chartData      = @json($chartData);
+const heatmapData    = @json($heatmapData);
+const completedStages= @json($completedStages);
+const jamMingguIni   = @json($jamMingguIni);
+const badgesData     = @json($badges);
+const streakNow      = {{ $streakNow }};
+const streakMax      = {{ $streakMax }};
+const totalHari      = {{ $totalHariBelajar }};
+const totalJam       = {{ $totalJam }};
+const jamMingguTotal = {{ $jamMingguIniTotal }};
+const jamRata        = {{ $jamRataHarian }};
+
 /* ══ CHART ══ */
 const ctx = document.getElementById('progressChart').getContext('2d');
 new Chart(ctx, {
-    type:'line',
-    data:{
-        labels:['Jan','Feb','Mar','Apr'],
-        datasets:[
-            { label:'Materi selesai', data:[5,8,10,13], borderColor:'#8B7BFF', backgroundColor:'rgba(139,123,255,0.18)', fill:true, tension:0.4, pointRadius:5, pointBackgroundColor:'#fff', pointBorderColor:'#8B7BFF', pointBorderWidth:2 },
-            { label:'Jam belajar',    data:[56,68,70,90], borderColor:'#FFA69E', backgroundColor:'rgba(255,166,158,0.15)', fill:true, tension:0.4, pointRadius:5, pointBackgroundColor:'#fff', pointBorderColor:'#FFA69E', pointBorderWidth:2 }
+    type: 'line',
+    data: {
+        labels: chartData.map(d => d.label),
+        datasets: [
+            {
+                label: 'Materi selesai',
+                data: chartData.map(d => d.materi),
+                borderColor: '#8B7BFF', backgroundColor: 'rgba(139,123,255,0.18)',
+                fill: true, tension: 0.4, pointRadius: 5,
+                pointBackgroundColor: '#fff', pointBorderColor: '#8B7BFF', pointBorderWidth: 2
+            },
+            {
+                label: 'Jam belajar',
+                data: chartData.map(d => d.jam),
+                borderColor: '#FFA69E', backgroundColor: 'rgba(255,166,158,0.15)',
+                fill: true, tension: 0.4, pointRadius: 5,
+                pointBackgroundColor: '#fff', pointBorderColor: '#FFA69E', pointBorderWidth: 2
+            }
         ]
     },
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ usePointStyle:true, padding:20, font:{size:12} } } }, scales:{ y:{ beginAtZero:true, grid:{color:'#eee'} }, x:{ grid:{color:'#f5f5f5'} } } }
+    options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20, font: { size: 12 } } } },
+        scales: { y: { beginAtZero: true, grid: { color: '#eee' } }, x: { grid: { color: '#f5f5f5' } } }
+    }
 });
-
-/* ══ DATA MATERI ══ */
-const materiData = [
-    // CP 1 - Proses Bisnis
-    { no:1,  title:'Proses Bisnis di Bidang Teknik Jaringan Komputer', cp:'CP 1', topic:'Proses Bisnis',          date:'5 Jan 2026',  dur:'60 mnt' },
-    { no:2,  title:'Perencanaan & Analisis Kebutuhan Pelanggan',       cp:'CP 1', topic:'Proses Bisnis',          date:'8 Jan 2026',  dur:'45 mnt' },
-    { no:3,  title:'Instalasi, Konfigurasi & Kepuasan Pelanggan',      cp:'CP 1', topic:'Proses Bisnis',          date:'12 Jan 2026', dur:'75 mnt' },
-    // CP 2 - Perkembangan Teknologi
-    { no:4,  title:'Perkembangan Teknologi 5G & Microwave Link',       cp:'CP 2', topic:'Perkembangan Teknologi', date:'15 Jan 2026', dur:'60 mnt' },
-    { no:5,  title:'Teknologi IPv6 & Serat Optik Terkini',             cp:'CP 2', topic:'Perkembangan Teknologi', date:'18 Jan 2026', dur:'50 mnt' },
-    { no:6,  title:'IoT, Smart Device, Smart Home & Smart City',       cp:'CP 2', topic:'Perkembangan Teknologi', date:'22 Jan 2026', dur:'55 mnt' },
-    { no:7,  title:'Cloud Computing & Keamanan Informasi',             cp:'CP 2', topic:'Perkembangan Teknologi', date:'25 Jan 2026', dur:'60 mnt' },
-    { no:8,  title:'Penetrasi Internet & Isu Implementasi Jaringan',   cp:'CP 2', topic:'Perkembangan Teknologi', date:'28 Jan 2026', dur:'45 mnt' },
-    // CP 4 - Orientasi Dasar
-    { no:9,  title:'Penggunaan Peralatan Komputer & Telekomunikasi',   cp:'CP 4', topic:'Orientasi Dasar',        date:'2 Feb 2026',  dur:'90 mnt' },
-    { no:10, title:'Penggunaan Teknologi Router',                      cp:'CP 4', topic:'Orientasi Dasar',        date:'5 Feb 2026',  dur:'90 mnt' },
-    { no:11, title:'Penggunaan Manageable Switch',                     cp:'CP 4', topic:'Orientasi Dasar',        date:'8 Feb 2026',  dur:'75 mnt' },
-    { no:12, title:'Penggunaan Teknologi OTDR & Firewall',             cp:'CP 4', topic:'Orientasi Dasar',        date:'12 Feb 2026', dur:'80 mnt' },
-    // CP 6 - Media & Jaringan Telekomunikasi
-    { no:13, title:'Prinsip Dasar Sistem IPv4 & IPv6',                 cp:'CP 6', topic:'Media & Jaringan',       date:'15 Feb 2026', dur:'60 mnt' },
-    { no:14, title:'Prinsip Dasar TCP/IP & Networking Service',        cp:'CP 6', topic:'Media & Jaringan',       date:'18 Feb 2026', dur:'55 mnt' },
-    { no:15, title:'Sistem Keamanan Jaringan Telekomunikasi',          cp:'CP 6', topic:'Media & Jaringan',       date:'22 Feb 2026', dur:'70 mnt' },
-    { no:16, title:'Sistem Seluler & Microwave',                       cp:'CP 6', topic:'Media & Jaringan',       date:'25 Feb 2026', dur:'60 mnt' },
-    { no:17, title:'Sistem VSAT IP & Optik',                           cp:'CP 6', topic:'Media & Jaringan',       date:'28 Feb 2026', dur:'65 mnt' },
-    { no:18, title:'Prinsip Dasar Sistem WLAN',                        cp:'CP 6', topic:'Media & Jaringan',       date:'3 Mar 2026',  dur:'50 mnt' },
-];
 
 /* ══ BUILD CONTENT ══ */
 
-function buildHariContent(){
-    const days=[
-        {d:'Sen',v:2},{d:'Sel',v:0},{d:'Rab',v:3},{d:'Kam',v:1},{d:'Jum',v:4},{d:'Sab',v:2},{d:'Min',v:0},
-        {d:'Sen',v:1},{d:'Sel',v:3},{d:'Rab',v:2},{d:'Kam',v:4},{d:'Jum',v:1},{d:'Sab',v:0},{d:'Min',v:3},
-        {d:'Sen',v:3},{d:'Sel',v:2},{d:'Rab',v:1}
-    ];
-    const lc=v=>v===0?'':v===1?'l1':v===2?'l2':v===3?'l3':'l4';
-    const tips=['Tidak belajar','1-2 jam','3-4 jam','5-6 jam','7+ jam'];
-    const cells=days.map(d=>`<div class="heatmap-cell ${lc(d.v)}" data-tip="${d.d}: ${tips[d.v]}"></div>`).join('');
+function buildHariContent() {
+    const cells = [];
+    for (let i = 89; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const key  = d.toISOString().split('T')[0];
+        const mins = heatmapData[key] || 0;
+        const lvl  = mins === 0 ? '' : mins < 60 ? 'l1' : mins < 120 ? 'l2' : mins < 180 ? 'l3' : 'l4';
+        const tip  = mins === 0 ? 'Tidak belajar' : `${Math.round(mins / 60 * 10) / 10} jam`;
+        cells.push(`<div class="heatmap-cell ${lvl}" data-tip="${key}: ${tip}"></div>`);
+    }
     return `
     <div class="streak-row">
-        <div class="streak-mini"><div class="streak-mini-num">89</div><div class="streak-mini-label">Total Hari</div></div>
-        <div class="streak-mini"><div class="streak-mini-num">14</div><div class="streak-mini-label">Streak Terpanjang 🔥</div></div>
-        <div class="streak-mini"><div class="streak-mini-num">6</div><div class="streak-mini-label">Streak Sekarang ⚡</div></div>
+        <div class="streak-mini"><div class="streak-mini-num">${totalHari}</div><div class="streak-mini-label">Total Hari</div></div>
+        <div class="streak-mini"><div class="streak-mini-num">${streakMax}</div><div class="streak-mini-label">Streak Terpanjang 🔥</div></div>
+        <div class="streak-mini"><div class="streak-mini-num">${streakNow}</div><div class="streak-mini-label">Streak Sekarang ⚡</div></div>
     </div>
-    <div style="font-size:.78rem;font-weight:700;color:var(--gray-800);margin-bottom:.6rem;">Heatmap Aktivitas Belajar</div>
-    <div class="heatmap-grid">${cells}</div>
+    <div style="font-size:.78rem;font-weight:700;color:var(--gray-800);margin-bottom:.6rem;">Heatmap Aktivitas Belajar (90 hari terakhir)</div>
+    <div class="heatmap-grid">${cells.join('')}</div>
     <div class="heatmap-legend">
         <span>Kurang</span>
         <div class="hm-leg" style="background:#f0ebff"></div>
@@ -527,161 +530,147 @@ function buildHariContent(){
 
 let activeCp = 'Semua';
 
-function buildMateriContent(){
-    const cps = ['Semua','CP 1','CP 2','CP 4','CP 6'];
-    const filterBtns = cps.map(c=>`<button class="cp-btn ${c===activeCp?'active':''}" onclick="filterCp('${c}')">${c}</button>`).join('');
-    const rows = materiData.map(m=>`
-    <div class="materi-item" data-cp="${m.cp}" data-title="${m.title.toLowerCase()} ${m.topic.toLowerCase()}">
-        <div class="materi-num">${m.no}</div>
+function buildMateriContent() {
+    const roadmapNames = ['Semua', ...new Set(completedStages.map(s => s.roadmap?.title ?? 'Lainnya'))];
+    const filterBtns   = roadmapNames.map(c =>
+        `<button class="cp-btn ${c === activeCp ? 'active' : ''}" onclick="filterCp('${c}')">${c}</button>`
+    ).join('');
+    const rows = completedStages.map((s, i) => `
+    <div class="materi-item" data-cp="${s.roadmap?.title ?? 'Lainnya'}" data-title="${(s.stage?.title ?? '').toLowerCase()}">
+        <div class="materi-num">${i + 1}</div>
         <div class="materi-info">
-            <div class="materi-title">${m.title}</div>
-            <div class="materi-meta">📂 ${m.topic} &nbsp;·&nbsp; 🗓 ${m.date} &nbsp;·&nbsp; ⏱ ${m.dur}</div>
+            <div class="materi-title">${s.stage?.title ?? '-'}</div>
+            <div class="materi-meta">📂 ${s.roadmap?.title ?? '-'} &nbsp;·&nbsp; 🗓 ${s.completed_at ? s.completed_at.substring(0,10) : '-'} &nbsp;·&nbsp; ⏱ ${s.time_spent_minutes} mnt</div>
         </div>
-        <span class="materi-cp-tag">${m.cp}</span>
+        <span class="materi-cp-tag">${s.roadmap?.title ?? '-'}</span>
         <div class="materi-check">✅</div>
     </div>`).join('');
     return `
     <div class="cp-filter">${filterBtns}</div>
     <input class="materi-search" type="text" placeholder="🔍  Cari materi..." oninput="filterMateri(this.value)">
-    <div style="font-size:.72rem;color:var(--gray-400);font-weight:600;margin-bottom:.8rem;">18 materi selesai dari 4 CP</div>
+    <div style="font-size:.72rem;color:var(--gray-400);font-weight:600;margin-bottom:.8rem;">${completedStages.length} materi selesai</div>
     <div class="materi-list" id="materiList">${rows}</div>`;
 }
 
-function filterCp(cp){
+function filterCp(cp) {
     activeCp = cp;
     document.getElementById('bmBody').innerHTML = buildMateriContent();
 }
 
-function filterMateri(q){
-    document.querySelectorAll('.materi-item').forEach(el=>{
-        const matchCp    = activeCp==='Semua' || el.dataset.cp===activeCp;
+function filterMateri(q) {
+    document.querySelectorAll('.materi-item').forEach(el => {
+        const matchCp    = activeCp === 'Semua' || el.dataset.cp === activeCp;
         const matchQuery = el.dataset.title.includes(q.toLowerCase());
         el.style.display = (matchCp && matchQuery) ? '' : 'none';
     });
 }
 
-function buildJamContent(){
-    const week=[
-        {d:'Sen',h:3.5},{d:'Sel',h:2},{d:'Rab',h:5},{d:'Kam',h:1.5},
-        {d:'Jum',h:4},{d:'Sab',h:6},{d:'Min',h:0}
-    ];
-    const maxH=6;
-    const bars=week.map(w=>`
+function buildJamContent() {
+    const maxH = Math.max(...jamMingguIni.map(w => w.jam), 1);
+    const bars  = jamMingguIni.map(w => `
     <div class="jam-day">
         <div class="jam-day-bar-wrap">
-            <div class="jam-day-bar" style="height:${(w.h/maxH)*80}px"></div>
+            <div class="jam-day-bar" style="height:${(w.jam / maxH) * 80}px"></div>
         </div>
-        <div class="jam-day-name">${w.d}</div>
-        <div class="jam-day-val">${w.h}j</div>
+        <div class="jam-day-name">${w.day}</div>
+        <div class="jam-day-val">${w.jam}j</div>
     </div>`).join('');
     return `
     <div style="font-size:.78rem;font-weight:700;color:var(--gray-800);margin-bottom:.8rem;">Jam Belajar Minggu Ini</div>
     <div class="jam-week-grid">${bars}</div>
     <div class="jam-stat-row">
-        <div class="jam-stat"><div class="jam-stat-num">22j</div><div class="jam-stat-label">Minggu Ini</div></div>
-        <div class="jam-stat"><div class="jam-stat-num">3.1j</div><div class="jam-stat-label">Rata-rata/Hari</div></div>
-        <div class="jam-stat"><div class="jam-stat-num">265j</div><div class="jam-stat-label">Total Semua</div></div>
+        <div class="jam-stat"><div class="jam-stat-num">${jamMingguTotal}j</div><div class="jam-stat-label">Minggu Ini</div></div>
+        <div class="jam-stat"><div class="jam-stat-num">${jamRata}j</div><div class="jam-stat-label">Rata-rata/Hari</div></div>
+        <div class="jam-stat"><div class="jam-stat-num">${totalJam}j</div><div class="jam-stat-label">Total Semua</div></div>
     </div>`;
 }
 
-function buildBadgeContent(){
-    const badges=[
-        {icon:'⭐',name:'First Step',    xp:'+100 XP', done:true},
-        {icon:'🔥',name:'Consistent',    xp:'+250 XP', done:true},
-        {icon:'🥉',name:'Bronze Medal',  xp:'+500 XP', done:true},
-        {icon:'📖',name:'Book Worm',     xp:'+150 XP', done:true},
-        {icon:'⚡',name:'Speed Learner', xp:'+200 XP', done:true},
-        {icon:'🎯',name:'On Target',     xp:'+300 XP', done:true},
-        {icon:'🥈',name:'Silver Medal',  xp:'+750 XP', done:false},
-        {icon:'🥇',name:'Gold Medal',    xp:'+1000 XP',done:false},
-        {icon:'💎',name:'Diamond',       xp:'+1500 XP',done:false},
-        {icon:'🚀',name:'Rocket',        xp:'+500 XP', done:false},
-        {icon:'🌟',name:'All Star',      xp:'+800 XP', done:false},
-        {icon:'🏆',name:'Winner',        xp:'+2000 XP',done:false},
-    ];
-    const cards=badges.map(b=>`
-    <div class="badge-gal-card ${b.done?'':'locked-gal'}">
+function buildBadgeContent() {
+    const earned  = badgesData.filter(b => b.unlocked).length;
+    const totalXp = badgesData.filter(b => b.unlocked).reduce((s, b) => s + (b.xp || 0), 0);
+    const cards   = badgesData.map(b => `
+    <div class="badge-gal-card ${b.unlocked ? '' : 'locked-gal'}">
         <div class="badge-gal-icon">${b.icon}</div>
         <div class="badge-gal-name">${b.name}</div>
-        <div class="badge-gal-xp">${b.xp}</div>
-        <div class="badge-gal-status ${b.done?'status-done':'status-locked'}">${b.done?'✓ Diraih':'🔒 Locked'}</div>
+        <div class="badge-gal-xp">+${b.xp} XP</div>
+        <div class="badge-gal-status ${b.unlocked ? 'status-done' : 'status-locked'}">${b.unlocked ? '✓ Diraih' : '🔒 Locked'}</div>
     </div>`).join('');
     return `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-        <div style="font-size:.78rem;color:var(--gray-400);font-weight:600;">6 dari 12 badge diraih</div>
-        <div style="font-size:.72rem;font-weight:700;background:#efe9ff;color:#6C4CF1;padding:.25rem .7rem;border-radius:20px;">Total: 1500 XP</div>
+        <div style="font-size:.78rem;color:var(--gray-400);font-weight:600;">${earned} dari ${badgesData.length} badge diraih</div>
+        <div style="font-size:.72rem;font-weight:700;background:#efe9ff;color:#6C4CF1;padding:.25rem .7rem;border-radius:20px;">Total: ${totalXp} XP</div>
     </div>
     <div class="badge-gallery">${cards}</div>`;
 }
 
 /* ══ OPEN / CLOSE BIG MODAL ══ */
-const modalConfigs={
-    hari:  { icon:'📅', title:'Total Hari Belajar',   sub:'Streak & heatmap aktivitas belajarmu',       build:buildHariContent  },
-    materi:{ icon:'📚', title:'Riwayat Materi',        sub:'18 materi dari CP 1, 2, 4 & 6 telah selesai',build:buildMateriContent},
-    jam:   { icon:'⏱️', title:'Statistik Jam Belajar', sub:'Breakdown waktu belajar per hari',           build:buildJamContent   },
-    badge: { icon:'🏅', title:'Koleksi Badge',         sub:'Badge yang sudah & belum diraih',            build:buildBadgeContent },
+const modalConfigs = {
+    hari:  { icon:'📅', title:'Total Hari Belajar',   sub:'Streak & heatmap aktivitas belajarmu',            build: buildHariContent   },
+    materi:{ icon:'📚', title:'Riwayat Materi',        sub:`${completedStages.length} materi telah selesai`,  build: buildMateriContent },
+    jam:   { icon:'⏱️', title:'Statistik Jam Belajar', sub:'Breakdown waktu belajar per hari',                build: buildJamContent    },
+    badge: { icon:'🏅', title:'Koleksi Badge',         sub:'Badge yang sudah & belum diraih',                 build: buildBadgeContent  },
 };
 
-function openStatsModal(type){
-    const cfg=modalConfigs[type];
+function openStatsModal(type) {
+    const cfg = modalConfigs[type];
     document.getElementById('bmIcon').innerText  = cfg.icon;
     document.getElementById('bmTitle').innerText = cfg.title;
     document.getElementById('bmSub').innerText   = cfg.sub;
     document.getElementById('bmBody').innerHTML  = cfg.build();
     document.getElementById('bigModal').classList.add('active');
 }
-function closeBigModal(){ document.getElementById('bigModal').classList.remove('active'); }
-function handleBigModalBg(e){ if(e.target===document.getElementById('bigModal')) closeBigModal(); }
+function closeBigModal() { document.getElementById('bigModal').classList.remove('active'); }
+function handleBigModalBg(e) { if (e.target === document.getElementById('bigModal')) closeBigModal(); }
 
 /* ══ CONFETTI ══ */
 let confettiAnim;
-const COLORS=['#6C4CF1','#A586FF','#ff8fab','#FFA69E','#FFD166','#06D6A0'];
-function launchConfetti(){
-    const canvas=document.getElementById('confettiCanvas');
-    const box=document.getElementById('modalBox');
-    canvas.width=box.offsetWidth; canvas.height=box.offsetHeight;
-    const c=canvas.getContext('2d');
-    const pieces=Array.from({length:80},()=>({
-        x:Math.random()*canvas.width,y:Math.random()*canvas.height-canvas.height,
-        r:Math.random()*6+3,d:Math.random()*4+2,
-        color:COLORS[Math.floor(Math.random()*COLORS.length)],
-        tilt:0,tiltAngle:0,tiltSpeed:Math.random()*.1+.05,
+const COLORS = ['#6C4CF1','#A586FF','#ff8fab','#FFA69E','#FFD166','#06D6A0'];
+function launchConfetti() {
+    const canvas = document.getElementById('confettiCanvas');
+    const box    = document.getElementById('modalBox');
+    canvas.width = box.offsetWidth; canvas.height = box.offsetHeight;
+    const c = canvas.getContext('2d');
+    const pieces = Array.from({ length: 80 }, () => ({
+        x: Math.random() * canvas.width, y: Math.random() * canvas.height - canvas.height,
+        r: Math.random() * 6 + 3, d: Math.random() * 4 + 2,
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        tilt: 0, tiltAngle: 0, tiltSpeed: Math.random() * .1 + .05,
     }));
-    let frame=0;
-    function draw(){
-        c.clearRect(0,0,canvas.width,canvas.height);
-        pieces.forEach(p=>{
-            p.tiltAngle+=p.tiltSpeed;p.y+=p.d;p.tilt=Math.sin(p.tiltAngle)*12;
-            if(p.y>canvas.height){p.y=-10;p.x=Math.random()*canvas.width;}
-            c.beginPath();c.lineWidth=p.r;c.strokeStyle=p.color;
-            c.moveTo(p.x+p.tilt+p.r/2,p.y);c.lineTo(p.x+p.tilt,p.y+p.tilt+p.r/2);c.stroke();
+    let frame = 0;
+    function draw() {
+        c.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p => {
+            p.tiltAngle += p.tiltSpeed; p.y += p.d; p.tilt = Math.sin(p.tiltAngle) * 12;
+            if (p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width; }
+            c.beginPath(); c.lineWidth = p.r; c.strokeStyle = p.color;
+            c.moveTo(p.x + p.tilt + p.r / 2, p.y); c.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2); c.stroke();
         });
         frame++;
-        if(frame<180) confettiAnim=requestAnimationFrame(draw);
-        else c.clearRect(0,0,canvas.width,canvas.height);
+        if (frame < 180) confettiAnim = requestAnimationFrame(draw);
+        else c.clearRect(0, 0, canvas.width, canvas.height);
     }
     draw();
 }
 
 /* ══ ACHIEVEMENT MODAL ══ */
-function openAchievement(icon,title,desc,reward,xp,xpMax){
-    document.getElementById('achievementModal').style.display='flex';
+function openAchievement(icon, title, desc, reward, xp, xpMax) {
+    document.getElementById('achievementModal').style.display = 'flex';
     document.getElementById('modalEmoji').innerText  = icon;
     document.getElementById('modalTitle').innerText  = title;
     document.getElementById('modalDesc').innerText   = desc;
     document.getElementById('modalReward').innerText = reward;
-    document.getElementById('xpMax').innerText       = xpMax+' XP';
-    const bar=document.getElementById('xpBarFill');
-    bar.style.width='0%';
-    setTimeout(()=>{ bar.style.width=Math.min((xp/xpMax)*100,100)+'%'; },300);
+    document.getElementById('xpMax').innerText       = xpMax + ' XP';
+    const bar = document.getElementById('xpBarFill');
+    bar.style.width = '0%';
+    setTimeout(() => { bar.style.width = Math.min((xp / xpMax) * 100, 100) + '%'; }, 300);
     cancelAnimationFrame(confettiAnim);
-    setTimeout(launchConfetti,200);
+    setTimeout(launchConfetti, 200);
 }
-function closeAchievement(){
+function closeAchievement() {
     cancelAnimationFrame(confettiAnim);
-    document.getElementById('achievementModal').style.display='none';
+    document.getElementById('achievementModal').style.display = 'none';
 }
-function handleAchvModalBg(e){ if(e.target===document.getElementById('achievementModal')) closeAchievement(); }
+function handleAchvModalBg(e) { if (e.target === document.getElementById('achievementModal')) closeAchievement(); }
 
 </script>
 @endpush

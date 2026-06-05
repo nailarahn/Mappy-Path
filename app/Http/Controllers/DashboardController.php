@@ -488,18 +488,20 @@ class DashboardController extends Controller
         $totalJam = round(LearningLog::where('user_id', $user->id)->sum('duration_minutes') / 60);
 
         $badgeEarned = \DB::table('user_badges')->where('user_id', $user->id)->count();
+        $totalBadge  = \DB::table('badges')->count();
 
+        // Chart data per bulan (4 bulan terakhir)
         $chartData = [];
         for ($i = 3; $i >= 0; $i--) {
-            $start = now()->subWeeks($i)->startOfWeek()->toDateString();
-            $end   = now()->subWeeks($i)->endOfWeek()->toDateString();
+            $start = now()->subMonths($i)->startOfMonth()->toDateString();
+            $end   = now()->subMonths($i)->endOfMonth()->toDateString();
 
             $mins = LearningLog::where('user_id', $user->id)
                 ->whereBetween('log_date', [$start, $end])
                 ->sum('duration_minutes');
 
             $chartData[] = [
-                'label'  => $i === 0 ? 'Minggu ini' : 'Minggu -' . $i,
+                'label'  => now()->subMonths($i)->translatedFormat('M Y'),
                 'materi' => UserStage::where('user_id', $user->id)
                     ->where('is_completed', true)
                     ->whereBetween('completed_at', [$start, $end])
@@ -508,11 +510,72 @@ class DashboardController extends Controller
             ];
         }
 
+        // Streak
+        $allLogDates = LearningLog::where('user_id', $user->id)
+            ->selectRaw('DISTINCT DATE(log_date) as d')
+            ->orderByDesc('d')
+            ->pluck('d')
+            ->toArray();
+
+        $logDateSet = array_flip($allLogDates);
+        $streakMax  = 0;
+        $cur        = 0;
+        $prevDate   = null;
+        foreach (array_reverse($allLogDates) as $d) {
+            if ($prevDate === null || \Carbon\Carbon::parse($d)->diffInDays(\Carbon\Carbon::parse($prevDate)) === 1) {
+                $cur++;
+            } else {
+                $cur = 1;
+            }
+            $streakMax = max($streakMax, $cur);
+            $prevDate  = $d;
+        }
+
+        $streakNow = 0;
+        $check     = now()->toDateString();
+        while (isset($logDateSet[$check])) {
+            $streakNow++;
+            $check = \Carbon\Carbon::parse($check)->subDay()->toDateString();
+        }
+
+        // Materi selesai dengan detail
+        $completedStages = UserStage::with(['stage', 'roadmap'])
+            ->where('user_id', $user->id)
+            ->where('is_completed', true)
+            ->orderBy('completed_at')
+            ->get();
+
+        // Heatmap 90 hari terakhir
+        $heatmapData = LearningLog::where('user_id', $user->id)
+            ->where('log_date', '>=', now()->subDays(89)->toDateString())
+            ->selectRaw('DATE(log_date) as d, SUM(duration_minutes) as total_mins')
+            ->groupBy('d')
+            ->pluck('total_mins', 'd')
+            ->toArray();
+
+        // Jam per hari minggu ini
+        $jamMingguIni = [];
+        for ($i = 0; $i < 7; $i++) {
+            $d    = now()->startOfWeek()->addDays($i)->toDateString();
+            $mins = LearningLog::where('user_id', $user->id)
+                ->where('log_date', $d)
+                ->sum('duration_minutes');
+            $jamMingguIni[] = [
+                'day' => now()->startOfWeek()->addDays($i)->translatedFormat('D'),
+                'jam' => round($mins / 60, 1),
+            ];
+        }
+
+        $jamMingguIniTotal = round(array_sum(array_column($jamMingguIni, 'jam')), 1);
+        $jamRataHarian     = $totalHariBelajar > 0 ? round($totalJam / $totalHariBelajar, 1) : 0;
+
         $unlockedIds = \DB::table('user_badges')->where('user_id', $user->id)->pluck('badge_id')->toArray();
         $badges = \DB::table('badges')->get()->map(fn($b) => [
+            'id'       => $b->id,
             'name'     => $b->name,
             'desc'     => $b->description,
-            'color'    => $b->color ?? 'indigo',
+            'icon'     => $b->icon ?? '🏅',
+            'xp'       => $b->xp ?? 0,
             'unlocked' => in_array($b->id, $unlockedIds),
         ])->toArray();
 
@@ -521,7 +584,15 @@ class DashboardController extends Controller
             'materiSelesai',
             'totalJam',
             'badgeEarned',
+            'totalBadge',
             'chartData',
+            'streakNow',
+            'streakMax',
+            'completedStages',
+            'heatmapData',
+            'jamMingguIni',
+            'jamMingguIniTotal',
+            'jamRataHarian',
             'badges'
         ));
     }
