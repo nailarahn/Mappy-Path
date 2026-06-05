@@ -14,7 +14,8 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
-        'name', 'username', 'email', 'password', 'role', 'avatar', 'jurusan', 'foto',
+    'name', 'username', 'email', 'password', 'role', 'avatar', 'jurusan', 'foto',
+    'xp', 'streak_days', 'last_active_date',
     ];
 
     protected $hidden = [
@@ -22,8 +23,9 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password'          => 'hashed',
+    'email_verified_at'  => 'datetime',
+    'password'           => 'hashed',
+    'last_active_date'   => 'date',
     ];
 
     // ── RELATIONS ──────────────────────────────────────

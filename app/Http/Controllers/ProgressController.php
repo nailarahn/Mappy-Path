@@ -49,17 +49,27 @@ class ProgressController extends Controller
 
         // ── 4. BADGE LIST ──────────────────────────────────────────
         $earnedBadgeIds = $user->badges()->pluck('badges.id')->toArray();
+        $stagesDone     = $user->completedStages()->count();
 
-        $allBadges = Badge::all()->map(function ($badge) use ($earnedBadgeIds) {
-            return [
-                'id'          => $badge->id,
-                'name'        => $badge->name,
-                'description' => $badge->description,
-                'icon'        => $badge->icon,
-                'color'       => $badge->color,
-                'earned'      => in_array($badge->id, $earnedBadgeIds),
-                'earned_at'   => in_array($badge->id, $earnedBadgeIds)
-                    ? $badge->pivot->earned_at ?? null
+        $allBadges = Badge::all()->map(function ($badge) use ($earnedBadgeIds, $stagesDone) {
+            $earnedPivot = in_array($badge->id, $earnedBadgeIds)
+                ? $user->badges()->where('badges.id', $badge->id)->first()?->pivot
+                : null;
+
+        return [
+            'id'              => $badge->id,
+            'name'            => $badge->name,
+            'description'     => $badge->description,
+            'icon'            => $badge->icon,
+            'color'           => $badge->color,
+            'xp_reward'       => $badge->xp_reward,
+            'condition_type'  => $badge->condition_type,
+            'condition_value' => $badge->condition_value,
+            'earned'          => in_array($badge->id, $earnedBadgeIds),
+            'earned_at'       => $earnedPivot?->earned_at,
+            // Progress bar untuk stages_done
+            'progress'        => $badge->condition_type === 'stages_done'
+                    ? min($stagesDone, $badge->condition_value)
                     : null,
             ];
         });

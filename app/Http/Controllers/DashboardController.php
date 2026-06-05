@@ -8,6 +8,7 @@ use App\Models\Roadmap;
 use App\Models\UserRoadmap;
 use App\Models\UserStage;
 use App\Models\LearningLog;
+use App\Services\BadgeService;
 
 
 class DashboardController extends Controller
@@ -17,24 +18,20 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        // Enrollment aktif user
         $activeEnrollment = UserRoadmap::with('roadmap')
             ->where('user_id', $user->id)
             ->where('status', 'active')
             ->latest()
             ->first();
 
-        // ✅ BARU: Rekomendasi = stage berikutnya yang belum selesai
         $recommendations = collect();
 
-        // Stage yang sudah selesai oleh user (semua roadmap)
         $completedStageIds = UserStage::where('user_id', $user->id)
             ->where('is_completed', true)
             ->pluck('stage_id')
             ->toArray();
 
         if ($activeEnrollment) {
-            // User punya roadmap aktif → cari stage yang belum selesai
             $roadmap = Roadmap::with(['stages' => fn($q) => $q->where('is_active', true)->orderBy('order')])
                 ->find($activeEnrollment->roadmap_id);
 
@@ -53,13 +50,12 @@ class DashboardController extends Controller
                 $recommendations = $nextStages->map(function ($stage) use ($roadmap, $typeIcons) {
                     $meta = $typeIcons[$stage->type] ?? ['icon' => '📚', 'color' => '#372466'];
                     return [
-                        'title'      => $stage->title,
-                        'type'       => $stage->getTypeLabel(),
-                        'duration'   => $stage->estimated_minutes . ' menit',
-                        'icon'       => $meta['icon'],
-                        'color'      => $meta['color'],
-                        // ✅ Link langsung ke stage
-                        'route'      => route('roadmap.stage', [
+                        'title'    => $stage->title,
+                        'type'     => $stage->getTypeLabel(),
+                        'duration' => $stage->estimated_minutes . ' menit',
+                        'icon'     => $meta['icon'],
+                        'color'    => $meta['color'],
+                        'route'    => route('roadmap.stage', [
                             'roadmapId' => $roadmap->id,
                             'stageId'   => $stage->id,
                         ]),
@@ -68,8 +64,6 @@ class DashboardController extends Controller
             }
         }
 
-        // Kalau rekomendasi kosong (user baru / semua stage selesai)
-        // → tampilkan stage pertama dari roadmap yang tersedia
         if ($recommendations->isEmpty()) {
             $roadmapsAvailable = Roadmap::with(['stages' => fn($q) => $q->where('is_active', true)->orderBy('order')])
                 ->where('is_active', true)
@@ -85,13 +79,11 @@ class DashboardController extends Controller
                     'duration' => $firstStage ? $firstStage->estimated_minutes . ' menit' : $rm->estimated_hours . ' jam',
                     'icon'     => '🚀',
                     'color'    => '#372466',
-                    // Kalau belum enrolled, arahkan ke halaman roadmap dulu
                     'route'    => route('roadmap'),
                 ];
             });
         }
 
-        // Materi selesai (untuk stat card)
         $materiSelesai = UserStage::where('user_id', $user->id)
             ->where('is_completed', true)
             ->count();
@@ -100,14 +92,12 @@ class DashboardController extends Controller
             ? ($activeEnrollment->roadmap->total_stages ?? 0)
             : 0;
 
-        // Target minggu ini
         $targetSelesai = $user->activeTargets()
             ->whereColumn('current_value', '>=', 'target_value')
             ->count();
 
         $totalTarget = $user->activeTargets()->count();
 
-        // Total menit belajar minggu ini
         $weeklyMinutes = LearningLog::where('user_id', $user->id)
             ->whereBetween('log_date', [
                 now()->startOfWeek()->toDateString(),
@@ -115,7 +105,6 @@ class DashboardController extends Controller
             ])
             ->sum('duration_minutes');
 
-        // Progress mingguan untuk chart
         $progressData = [];
         for ($i = 3; $i >= 0; $i--) {
             $start = now()->subWeeks($i)->startOfWeek()->toDateString();
@@ -159,30 +148,24 @@ class DashboardController extends Controller
 
         $roadmaps = Roadmap::with([
                 'stages' => function ($q) {
-                    $q->where('is_active', true)
-                      ->orderBy('order');
+                    $q->where('is_active', true)->orderBy('order');
                 }
             ])
             ->where('is_active', true)
             ->orderBy('order')
             ->get()
             ->map(function ($r) use ($enrolledRoadmapIds, $user) {
-
                 $enrollment = UserRoadmap::where('user_id', $user->id)
                     ->where('roadmap_id', $r->id)
                     ->first();
 
-                $r->is_enrolled = in_array($r->id, $enrolledRoadmapIds);
-
+                $r->is_enrolled   = in_array($r->id, $enrolledRoadmapIds);
                 $r->user_progress = $enrollment?->progress ?? 0;
 
                 return $r;
             });
 
-        return view('dashboard.roadmap', compact(
-            'roadmaps',
-            'completedStageIds'
-        ));
+        return view('dashboard.roadmap', compact('roadmaps', 'completedStageIds'));
     }
 
     public function stage($roadmapId, $stageId)
@@ -191,27 +174,21 @@ class DashboardController extends Controller
 
         $roadmap = Roadmap::with([
                 'stages' => function ($q) {
-                    $q->where('is_active', true)
-                      ->orderBy('order');
+                    $q->where('is_active', true)->orderBy('order');
                 }
             ])
             ->findOrFail($roadmapId);
 
         $stage = $roadmap->stages->firstWhere('id', $stageId);
 
-        if (!$stage) {
-            abort(404);
-        }
+        if (!$stage) abort(404);
 
-        // Cek enrollment
         $enrollment = UserRoadmap::where('user_id', $user->id)
             ->where('roadmap_id', $roadmapId)
             ->first();
 
         if (!$enrollment) {
-            return redirect()
-                ->route('roadmap')
-                ->with('error', 'Kamu belum terdaftar di roadmap ini.');
+            return redirect()->route('roadmap')->with('error', 'Kamu belum terdaftar di roadmap ini.');
         }
 
         $completedStageIds = UserStage::where('user_id', $user->id)
@@ -220,19 +197,15 @@ class DashboardController extends Controller
             ->pluck('stage_id')
             ->toArray();
 
-        $isCompleted = in_array($stageId, $completedStageIds);
-
-        $doneCount = count($completedStageIds);
-
+        $isCompleted     = in_array($stageId, $completedStageIds);
+        $doneCount       = count($completedStageIds);
         $progressPercent = $roadmap->total_stages > 0
             ? min(100, (int) round(($doneCount / $roadmap->total_stages) * 100))
             : 0;
 
-        $allStages = $roadmap->stages;
-
+        $allStages         = $roadmap->stages;
         $currentGroupIndex = 0;
-
-        $groupedStages = $allStages->groupBy(function ($s) {
+        $groupedStages     = $allStages->groupBy(function ($s) {
             return $s->group_label ?: $s->title;
         });
 
@@ -257,8 +230,7 @@ class DashboardController extends Controller
 
     public function enroll($roadmapId)
     {
-        $user = Auth::user();
-
+        $user    = Auth::user();
         $roadmap = Roadmap::findOrFail($roadmapId);
 
         $existing = UserRoadmap::where('user_id', $user->id)
@@ -266,7 +238,6 @@ class DashboardController extends Controller
             ->first();
 
         if (!$existing) {
-
             UserRoadmap::create([
                 'user_id'    => $user->id,
                 'roadmap_id' => $roadmapId,
@@ -276,21 +247,16 @@ class DashboardController extends Controller
             ]);
         }
 
-        $firstStage = $roadmap->stages()
-            ->orderBy('order')
-            ->first();
+        $firstStage = $roadmap->stages()->orderBy('order')->first();
 
         if ($firstStage) {
-
             return redirect()->route('roadmap.stage', [
                 'roadmapId' => $roadmapId,
                 'stageId'   => $firstStage->id,
             ])->with('success', 'Berhasil mendaftar! Selamat belajar 🎉');
         }
 
-        return redirect()
-            ->route('roadmap')
-            ->with('success', 'Berhasil mendaftar ke roadmap!');
+        return redirect()->route('roadmap')->with('success', 'Berhasil mendaftar ke roadmap!');
     }
 
     public function completeStage(Request $request, $roadmapId, $stageId)
@@ -303,10 +269,7 @@ class DashboardController extends Controller
 
         // Tandai stage selesai
         UserStage::updateOrCreate(
-            [
-                'user_id'  => $user->id,
-                'stage_id' => $stageId
-            ],
+            ['user_id' => $user->id, 'stage_id' => $stageId],
             [
                 'roadmap_id'         => $roadmapId,
                 'is_completed'       => true,
@@ -315,7 +278,7 @@ class DashboardController extends Controller
             ]
         );
 
-        // Update progress
+        // Update progress roadmap
         $totalStages = Roadmap::find($roadmapId)?->total_stages ?? 1;
 
         $completedStages = UserStage::where('user_id', $user->id)
@@ -343,7 +306,12 @@ class DashboardController extends Controller
             'activity'         => 'study',
         ]);
 
-        // Auto update target yang terhubung ke roadmap ini
+        // ── BADGE & STREAK ─────────────────────────────────────────
+        $badgeService = new BadgeService();
+        $badgeService->updateStreak($user);
+        $badgeService->checkAndAward($user);
+
+        // Auto update target
         $activeTarget = $user->targets()
             ->where('roadmap_id', $roadmapId)
             ->where('status', 'active')
@@ -355,18 +323,11 @@ class DashboardController extends Controller
         }
 
         // Cari next stage
-        $roadmap = Roadmap::with([
-                'stages' => fn($q) => $q->orderBy('order')
-            ])
-            ->find($roadmapId);
-
-        $stageIds = $roadmap->stages
-            ->pluck('id')
-            ->toArray();
+        $roadmap  = Roadmap::with(['stages' => fn($q) => $q->orderBy('order')])->find($roadmapId);
+        $stageIds = $roadmap->stages->pluck('id')->toArray();
 
         $currentIdx = array_search((int) $stageId, $stageIds);
-
-        $nextStage = $stageIds[$currentIdx + 1] ?? null;
+        $nextStage  = $stageIds[$currentIdx + 1] ?? null;
 
         if ($nextStage) {
             return redirect()->route('roadmap.stage', [
@@ -375,25 +336,15 @@ class DashboardController extends Controller
             ])->with('success', 'Tahap selesai! Lanjut ke materi berikutnya 🎉');
         }
 
-        return redirect()
-            ->route('roadmap')
-            ->with('success', 'Selamat! Kamu telah menyelesaikan semua materi di roadmap ini 🏆');
+        return redirect()->route('roadmap')->with('success', 'Selamat! Kamu telah menyelesaikan semua materi di roadmap ini 🏆');
     }
-    
+
     // TARGET
     public function target()
     {
-        $user = Auth::user();
-
-        $targets = $user->targets()
-            ->with('roadmap')
-            ->orderByDesc('created_at')
-            ->get();
-
-        return view('dashboard.target', compact(
-            'user',
-            'targets'
-        ));
+        $user    = Auth::user();
+        $targets = $user->targets()->with('roadmap')->orderByDesc('created_at')->get();
+        return view('dashboard.target', compact('user', 'targets'));
     }
 
     public function targetCreate()
@@ -423,9 +374,7 @@ class DashboardController extends Controller
             'status'        => 'active',
         ]);
 
-        return redirect()
-            ->route('target')
-            ->with('success', 'Target berhasil ditambahkan! 🎯');
+        return redirect()->route('target')->with('success', 'Target berhasil ditambahkan! 🎯');
     }
 
     public function targetEdit($id)
@@ -446,7 +395,6 @@ class DashboardController extends Controller
         ]);
 
         $target = Auth::user()->targets()->findOrFail($id);
-
         $target->update([
             'name'         => $request->name,
             'description'  => $request->description,
@@ -456,21 +404,13 @@ class DashboardController extends Controller
             'deadline'     => $request->deadline,
         ]);
 
-        return redirect()
-            ->route('target')
-            ->with('success', 'Target berhasil diperbarui! ✅');
+        return redirect()->route('target')->with('success', 'Target berhasil diperbarui! ✅');
     }
 
     public function targetDestroy($id)
     {
-        Auth::user()
-            ->targets()
-            ->findOrFail($id)
-            ->delete();
-
-        return redirect()
-            ->route('target')
-            ->with('success', 'Target berhasil dihapus! 🗑️');
+        Auth::user()->targets()->findOrFail($id)->delete();
+        return redirect()->route('target')->with('success', 'Target berhasil dihapus! 🗑️');
     }
 
     public function progress()
@@ -490,7 +430,6 @@ class DashboardController extends Controller
         $badgeEarned = \DB::table('user_badges')->where('user_id', $user->id)->count();
         $totalBadge  = \DB::table('badges')->count();
 
-        // Chart data per bulan (4 bulan terakhir)
         $chartData = [];
         for ($i = 3; $i >= 0; $i--) {
             $start = now()->subMonths($i)->startOfMonth()->toDateString();
@@ -510,7 +449,6 @@ class DashboardController extends Controller
             ];
         }
 
-        // Streak
         $allLogDates = LearningLog::where('user_id', $user->id)
             ->selectRaw('DISTINCT DATE(log_date) as d')
             ->orderByDesc('d')
@@ -538,14 +476,12 @@ class DashboardController extends Controller
             $check = \Carbon\Carbon::parse($check)->subDay()->toDateString();
         }
 
-        // Materi selesai dengan detail
         $completedStages = UserStage::with(['stage', 'roadmap'])
             ->where('user_id', $user->id)
             ->where('is_completed', true)
             ->orderBy('completed_at')
             ->get();
 
-        // Heatmap 90 hari terakhir
         $heatmapData = LearningLog::where('user_id', $user->id)
             ->where('log_date', '>=', now()->subDays(89)->toDateString())
             ->selectRaw('DATE(log_date) as d, SUM(duration_minutes) as total_mins')
@@ -553,7 +489,6 @@ class DashboardController extends Controller
             ->pluck('total_mins', 'd')
             ->toArray();
 
-        // Jam per hari minggu ini
         $jamMingguIni = [];
         for ($i = 0; $i < 7; $i++) {
             $d    = now()->startOfWeek()->addDays($i)->toDateString();
@@ -570,12 +505,12 @@ class DashboardController extends Controller
         $jamRataHarian     = $totalHariBelajar > 0 ? round($totalJam / $totalHariBelajar, 1) : 0;
 
         $unlockedIds = \DB::table('user_badges')->where('user_id', $user->id)->pluck('badge_id')->toArray();
-        $badges = \DB::table('badges')->get()->map(fn($b) => [
+        $badges = \App\Models\Badge::all()->map(fn($b) => [
             'id'       => $b->id,
             'name'     => $b->name,
             'desc'     => $b->description,
             'icon'     => $b->icon ?? '🏅',
-            'xp'       => $b->xp ?? 0,
+            'xp'       => $b->xp_reward ?? 0,
             'unlocked' => in_array($b->id, $unlockedIds),
         ])->toArray();
 
